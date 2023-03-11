@@ -1,4 +1,6 @@
 import React from "react";
+import PropTypes from "prop-types";
+import types from "../../utils/types.js";
 import {
   ConstructorElement,
   DragIcon,
@@ -63,6 +65,10 @@ const BurgerConstructor = ({ order }) => {
       </div>
     </div>
   );
+};
+
+BurgerConstructor.propTypes = {
+  order: PropTypes.arrayOf(types).isRequired,
 };
 
 export default BurgerConstructor;

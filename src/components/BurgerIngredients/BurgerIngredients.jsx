@@ -1,4 +1,6 @@
 import React from "react";
+import PropTypes from "prop-types";
+import types from "../../utils/types.js";
 import styles from "./BurgerIngredients.module.scss";
 
 import Categories from "../Categories/Categories";
@@ -36,6 +38,10 @@ const BurgerIngredients = ({ items }) => {
       </div>
     </div>
   );
+};
+
+BurgerIngredients.propTypes = {
+  items: PropTypes.arrayOf(types).isRequired,
 };
 
 export default BurgerIngredients;
