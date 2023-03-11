@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./NavbarItem.module.css";
+import styles from "./NavbarItem.module.scss";
 
 const NavbarItem = ({ title, Logo, active = false }) => {
   // const [active, setActive] = React.useState(0);
