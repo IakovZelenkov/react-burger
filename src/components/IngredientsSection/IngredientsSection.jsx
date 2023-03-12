@@ -1,4 +1,6 @@
 import React from "react";
+import PropTypes from "prop-types";
+import ingredientType from "../../utils/types.js";
 import styles from "./IngredientsSection.module.scss";
 import IngredientElement from "../IngredientElement/IngredientElement";
 
@@ -13,6 +15,11 @@ const IngredientsSection = ({ title, ingredients }) => {
       </ul>
     </div>
   );
+};
+
+IngredientsSection.propTypes = {
+  ingredients: PropTypes.arrayOf(ingredientType.isRequired).isRequired,
+  title: PropTypes.string.isRequired,
 };
 
 export default IngredientsSection;

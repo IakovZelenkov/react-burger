@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styles from "./NavbarItem.module.scss";
 
 const NavbarItem = ({ title, Logo, active = false }) => {
@@ -16,6 +17,12 @@ const NavbarItem = ({ title, Logo, active = false }) => {
       </a>
     </li>
   );
+};
+
+NavbarItem.propTypes = {
+  Logo: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
+  active: PropTypes.bool,
 };
 
 export default NavbarItem;

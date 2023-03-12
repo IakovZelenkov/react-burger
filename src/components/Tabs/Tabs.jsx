@@ -1,8 +1,8 @@
 import React from "react";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
-import styles from "./Categories.module.scss";
+import styles from "./Tabs.module.scss";
 
-const Categories = ({ items }) => {
+const Tabs = ({ items }) => {
   const [current, setCurrent] = React.useState(0);
   return (
     <div className={`${styles.wrapper} pb-10`}>
@@ -19,4 +19,4 @@ const Categories = ({ items }) => {
   );
 };
 
-export default Categories;
+export default Tabs;

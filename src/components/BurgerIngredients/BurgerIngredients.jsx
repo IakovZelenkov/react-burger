@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
-import types from "../../utils/types.js";
+import ingredientType from "../../utils/types.js";
 import styles from "./BurgerIngredients.module.scss";
 
-import Categories from "../Categories/Categories";
+import Tabs from "../Tabs/Tabs";
 import IngredientsSection from "../IngredientsSection/IngredientsSection";
 
 const BurgerIngredients = ({ items }) => {
@@ -13,26 +13,28 @@ const BurgerIngredients = ({ items }) => {
     sauce: "Соусы",
   };
 
-  const ingredientsSorted = items.reduce((acc, item) => {
-    if (!acc[item.type]) {
-      acc[item.type] = [];
-    }
-    acc[item.type].push(item);
-    return acc;
-  }, {});
+  const ingredientsSorted = React.useMemo(() => {
+    return items.reduce((acc, item) => {
+      if (!acc[item.type]) {
+        acc[item.type] = [];
+      }
+      acc[item.type].push(item);
+      return acc;
+    }, {});
+  }, [items]);
 
   return (
     <div className={styles.container}>
       <h1 className="title text text_type_main-large mb-5 pt-10">
         Соберите бургер
       </h1>
-      <Categories items={Object.values(ingredientTitles)} />
+      <Tabs items={Object.values(ingredientTitles)} />
       <div className={`${styles.wrapper} scroller`}>
-        {Object.keys(ingredientsSorted).map((ingredient) => (
+        {Object.keys(ingredientsSorted).map((key) => (
           <IngredientsSection
-            key={ingredient}
-            title={ingredientTitles[ingredient]}
-            ingredients={ingredientsSorted[ingredient]}
+            key={key}
+            title={ingredientTitles[key]}
+            ingredients={ingredientsSorted[key]}
           />
         ))}
       </div>
@@ -41,7 +43,7 @@ const BurgerIngredients = ({ items }) => {
 };
 
 BurgerIngredients.propTypes = {
-  items: PropTypes.arrayOf(types).isRequired,
+  items: PropTypes.arrayOf(ingredientType.isRequired).isRequired,
 };
 
 export default BurgerIngredients;

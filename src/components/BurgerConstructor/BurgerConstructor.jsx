@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import types from "../../utils/types.js";
+import ingredientType from "../../utils/types.js";
 import {
   ConstructorElement,
   DragIcon,
@@ -9,13 +9,17 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./BurgerConstructor.module.scss";
 
-const BurgerConstructor = ({ order }) => {
-  const totalPrice = order.reduce(
-    (acc, ingredient) => acc + ingredient.price,
-    0
-  );
-  const notBuns = order.filter((item) => item.type !== "bun");
-  const buns = order.filter((obj) => obj.type === "bun");
+const BurgerConstructor = ({ data }) => {
+  const { bun, ingredients } = React.useMemo(() => {
+    return {
+      bun: data.find((item) => item.type === "bun"),
+      ingredients: data.filter((item) => item.type !== "bun"),
+    };
+  }, [data]);
+
+  const totalPrice =
+    ingredients.reduce((acc, ingredient) => acc + ingredient.price, 0) +
+    bun.price * 2;
 
   return (
     <div className={`${styles.wrapper} mt-25 `}>
@@ -24,13 +28,13 @@ const BurgerConstructor = ({ order }) => {
           <ConstructorElement
             type="top"
             isLocked={true}
-            text={buns[0].name}
-            price={buns[0].price}
-            thumbnail={buns[0].image}
+            text={`${bun.name} (верх)`}
+            price={bun.price}
+            thumbnail={bun.image}
           />
         </div>
         <ul className={`${styles.list} scroller`}>
-          {notBuns.map((item, index) => (
+          {ingredients.map((item, index) => (
             <li key={item._id + index} className={`${styles.item} pl-8`}>
               <div className={styles.icon}>
                 <DragIcon />
@@ -47,9 +51,9 @@ const BurgerConstructor = ({ order }) => {
           <ConstructorElement
             type="bottom"
             isLocked={true}
-            text={buns[1].name}
-            price={buns[1].price}
-            thumbnail={buns[1].image}
+            text={`${bun.name} (низ)`}
+            price={bun.price}
+            thumbnail={bun.image}
           />
         </div>
       </div>
@@ -68,7 +72,7 @@ const BurgerConstructor = ({ order }) => {
 };
 
 BurgerConstructor.propTypes = {
-  order: PropTypes.arrayOf(types).isRequired,
+  data: PropTypes.arrayOf(ingredientType.isRequired).isRequired,
 };
 
 export default BurgerConstructor;

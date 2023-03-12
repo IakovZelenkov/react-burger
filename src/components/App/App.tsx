@@ -2,13 +2,20 @@ import React from "react";
 import styles from "./App.module.scss";
 
 import AppHeader from "../AppHeader/AppHeader";
-import Main from "../Main/Main";
+
+import BurgerIngredients from "../BurgerIngredients/BurgerIngredients";
+import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
+import data from "../../utils/data.js";
+import testOrder from "../../utils/testOrder.js";
 
 function App() {
   return (
     <div className={styles.app}>
       <AppHeader />
-      <Main />
+      <div className={styles.container}>
+        <BurgerIngredients items={data} />
+        <BurgerConstructor data={testOrder} />
+      </div>
     </div>
   );
 }
