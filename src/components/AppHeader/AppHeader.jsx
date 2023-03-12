@@ -7,7 +7,7 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./AppHeader.module.scss";
 
-import NavbarItem from "./components/NavbarItem/NavbarItem";
+import NavbarItem from "./components/NavbarItem";
 
 const AppHeader = () => {
   return (
