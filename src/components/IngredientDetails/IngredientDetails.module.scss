@@ -1,0 +1,24 @@
+.container {
+  .title {
+    // margin-bottom: 10px;
+    line-height: 64px;
+  }
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .details {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      margin: 0 0 60px 0;
+      padding: 0;
+
+      .item {
+        min-width: 112px;
+        text-align: center;
+      }
+    }
+  }
+}

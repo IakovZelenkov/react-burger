@@ -10,7 +10,7 @@ const IngredientsSection = ({ title, ingredients }) => {
       <h2 className="title text text_type_main-medium mb-6">{title}</h2>
       <ul className={`${styles.list}`}>
         {ingredients.map((ingredient) => (
-          <IngredientElement key={ingredient._id} {...ingredient} />
+          <IngredientElement key={ingredient._id} ingredient={ingredient} />
         ))}
       </ul>
     </div>
