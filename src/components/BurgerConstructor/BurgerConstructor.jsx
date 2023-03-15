@@ -12,7 +12,7 @@ import {
 import styles from "./BurgerConstructor.module.scss";
 
 const BurgerConstructor = ({ data }) => {
-  const [open, setOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = React.useState(false);
   const { bun, ingredients } = React.useMemo(() => {
     return {
       bun: data.find((item) => item.type === "bun"),
@@ -71,15 +71,17 @@ const BurgerConstructor = ({ data }) => {
             htmlType="button"
             type="primary"
             size="medium"
-            onClick={() => setOpen(true)}
+            onClick={() => setIsOpen(true)}
           >
             Оформить заказ
           </Button>
         </div>
       </div>
-      <Modal open={open} onClose={() => setOpen(false)}>
-        <OrderDetails />
-      </Modal>
+      {isOpen && (
+        <Modal onClose={() => setIsOpen(false)}>
+          <OrderDetails />
+        </Modal>
+      )}
     </>
   );
 };

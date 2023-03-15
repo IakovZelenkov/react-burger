@@ -11,11 +11,11 @@ import {
 
 const IngredientElement = ({ ingredient }) => {
   const { image, price, name, amount } = ingredient;
-  const [open, setOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = React.useState(false);
 
   return (
     <>
-      <li className={`${styles.wrapper}`} onClick={() => setOpen(true)}>
+      <li className={`${styles.wrapper}`} onClick={() => setIsOpen(true)}>
         {amount > 0 && <Counter count={amount} size="default" />}
         <img src={image} alt="Ингредиент" className={styles.image} />
         <div className={styles.priceInfo}>
@@ -24,9 +24,11 @@ const IngredientElement = ({ ingredient }) => {
         </div>
         <p className="text text_type_main-default">{name}</p>
       </li>
-      <Modal open={open} onClose={() => setOpen(false)}>
-        <IngredientDetails ingredient={ingredient} />
-      </Modal>
+      {isOpen && (
+        <Modal onClose={() => setIsOpen(false)}>
+          <IngredientDetails ingredient={ingredient} />
+        </Modal>
+      )}
     </>
   );
 };
