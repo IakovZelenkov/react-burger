@@ -19,9 +19,9 @@ const Modal = (props) => {
   };
 
   React.useEffect(() => {
-    document.body.addEventListener("keydown", handleEscClose);
+    document.addEventListener("keydown", handleEscClose);
     return () => {
-      document.body.removeEventListener("keydown", handleEscClose);
+      document.removeEventListener("keydown", handleEscClose);
     };
   });
 
