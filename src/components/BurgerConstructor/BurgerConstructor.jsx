@@ -13,12 +13,10 @@ import styles from "./BurgerConstructor.module.scss";
 
 const BurgerConstructor = ({ data }) => {
   const [isOpen, setIsOpen] = React.useState(false);
-  const { bun, ingredients } = React.useMemo(() => {
-    return {
-      bun: data.find((item) => item.type === "bun"),
-      ingredients: data.filter((item) => item.type !== "bun"),
-    };
-  }, [data]);
+  const { bun, ingredients } = {
+    bun: data.find((item) => item.type === "bun"),
+    ingredients: data.filter((item) => item.type !== "bun"),
+  };
 
   const totalPrice =
     ingredients.reduce((acc, ingredient) => acc + ingredient.price, 0) +
