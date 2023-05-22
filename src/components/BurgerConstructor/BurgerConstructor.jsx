@@ -1,6 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
-import ingredientType from "../../utils/types.js";
 import Modal from "../Modal/Modal";
 import OrderDetails from "../OrderDetails/OrderDetails.jsx";
 import {
@@ -11,16 +9,67 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./BurgerConstructor.module.scss";
 
-const BurgerConstructor = ({ data }) => {
+import { BurgerIngredientsContext } from "../../services/appContext";
+import { createOrder } from "../../utils/burger-api";
+
+const BurgerConstructor = () => {
   const [isOpen, setIsOpen] = React.useState(false);
+  const { items } = React.useContext(BurgerIngredientsContext);
+  const [orderNumber, setOrderNumber] = React.useState(0);
+
+  const totalPriceInitialState = { price: 0 };
+
+  function reducer(state, action) {
+    switch (action.type) {
+      case "add":
+        return { price: state.price + action.payload };
+      case "remove":
+        return { price: state.price - action.payload };
+      default:
+        throw new Error(`Wrong type of action: ${action.type}`);
+    }
+  }
+
+  const [totalPrice, totalPriceDispatcher] = React.useReducer(
+    reducer,
+    totalPriceInitialState
+  );
+
   const { bun, ingredients } = {
-    bun: data.find((item) => item.type === "bun"),
-    ingredients: data.filter((item) => item.type !== "bun"),
+    bun: items.find((item) => item.type === "bun"),
+    ingredients: items.filter((item) => item.type !== "bun"),
   };
 
-  const totalPrice =
-    ingredients.reduce((acc, ingredient) => acc + ingredient.price, 0) +
-    bun.price * 2;
+  React.useEffect(() => {
+    if (bun) {
+      totalPriceDispatcher({ type: "add", payload: bun.price * 2 });
+    }
+    if (ingredients) {
+      totalPriceDispatcher({
+        type: "add",
+        payload: ingredients.reduce(
+          (acc, ingredient) => acc + ingredient.price,
+          0
+        ),
+      });
+    }
+  }, [items]);
+
+  // const totalPrice =
+  //   ingredients.reduce((acc, ingredient) => acc + ingredient.price, 0) +
+  //   bun.price * 2;
+
+  const submitOrder = () => {
+    const ingredientsId = items.map((ingredient) => ingredient._id);
+    createOrder(ingredientsId)
+      .then((res) => {
+        setOrderNumber(res.order.number);
+        setIsOpen(true);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
 
   return (
     <>
@@ -61,7 +110,7 @@ const BurgerConstructor = ({ data }) => {
         </div>
         <div className={`${styles.info} pr-4`}>
           <p className={`${styles.price} text text_type_digits-medium mr-10`}>
-            <span>{totalPrice}</span>
+            <span>{totalPrice.price}</span>
 
             <CurrencyIcon type="primary" />
           </p>
@@ -69,7 +118,7 @@ const BurgerConstructor = ({ data }) => {
             htmlType="button"
             type="primary"
             size="medium"
-            onClick={() => setIsOpen(true)}
+            onClick={submitOrder}
           >
             Оформить заказ
           </Button>
@@ -77,15 +126,11 @@ const BurgerConstructor = ({ data }) => {
       </div>
       {isOpen && (
         <Modal onClose={() => setIsOpen(false)}>
-          <OrderDetails />
+          <OrderDetails orderNumber={orderNumber} />
         </Modal>
       )}
     </>
   );
-};
-
-BurgerConstructor.propTypes = {
-  data: PropTypes.arrayOf(ingredientType.isRequired).isRequired,
 };
 
 export default BurgerConstructor;

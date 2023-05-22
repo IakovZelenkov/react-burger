@@ -6,7 +6,9 @@ import AppHeader from "../AppHeader/AppHeader";
 import BurgerIngredients from "../BurgerIngredients/BurgerIngredients";
 import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
 
-import getIngredients from "../../utils/burger-api";
+import { getIngredients } from "../../utils/burger-api";
+
+import { BurgerIngredientsContext } from "../../services/appContext";
 
 function App() {
   const [items, setItems] = React.useState([]);
@@ -36,8 +38,10 @@ function App() {
         </div>
       ) : (
         <div className={styles.container}>
-          <BurgerIngredients items={items} />
-          <BurgerConstructor data={items} />
+          <BurgerIngredientsContext.Provider value={{ items, setItems }}>
+            <BurgerIngredients items={items} />
+            <BurgerConstructor />
+          </BurgerIngredientsContext.Provider>
         </div>
       )}
     </div>
