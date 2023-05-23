@@ -1,14 +1,15 @@
 import React from "react";
 import styles from "./OrderDetails.module.scss";
 import doneIcon from "../../images/doneIcon.svg";
+import PropTypes from "prop-types";
 
-const OrderDetails = () => {
+const OrderDetails = ({ orderNumber }) => {
   return (
     <div className={styles.container}>
       <h2
         className={`${styles.numbers} text text_type_digits-large pt-30 mb-8`}
       >
-        034536
+        {orderNumber}
       </h2>
       <p className="text text_type_main-medium mb-15">идентификатор заказа</p>
       <img src={doneIcon} alt="Иконка успешного заказа" className="mb-15" />
@@ -23,3 +24,7 @@ const OrderDetails = () => {
 };
 
 export default OrderDetails;
+
+OrderDetails.propTypes = {
+  orderNumber: PropTypes.number.isRequired,
+};

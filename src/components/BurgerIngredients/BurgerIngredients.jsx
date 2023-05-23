@@ -13,15 +13,13 @@ const BurgerIngredients = ({ items }) => {
     sauce: "Соусы",
   };
 
-  const ingredientsSorted = React.useMemo(() => {
-    return items.reduce((acc, item) => {
-      if (!acc[item.type]) {
-        acc[item.type] = [];
-      }
-      acc[item.type].push(item);
-      return acc;
-    }, {});
-  }, [items]);
+  const ingredientsSorted = items.reduce((acc, item) => {
+    if (!acc[item.type]) {
+      acc[item.type] = [];
+    }
+    acc[item.type].push(item);
+    return acc;
+  }, {});
 
   return (
     <div className={styles.container}>
