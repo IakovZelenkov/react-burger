@@ -9,7 +9,8 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./BurgerConstructor.module.scss";
 
-import { BurgerIngredientsContext } from "../../services/appContext";
+import { BurgerIngredientsContext, reducer } from "../../services/appContext";
+
 import { createOrder } from "../../utils/burger-api";
 
 const BurgerConstructor = () => {
@@ -17,50 +18,47 @@ const BurgerConstructor = () => {
   const { items } = React.useContext(BurgerIngredientsContext);
   const [orderNumber, setOrderNumber] = React.useState(0);
 
-  const totalPriceInitialState = { price: 0 };
+  // const totalPriceInitialState = { price: 0 };
 
-  function reducer(state, action) {
-    switch (action.type) {
-      case "add":
-        return { price: state.price + action.payload };
-      case "remove":
-        return { price: state.price - action.payload };
-      default:
-        throw new Error(`Wrong type of action: ${action.type}`);
-    }
-  }
-
-  const [totalPrice, totalPriceDispatcher] = React.useReducer(
-    reducer,
-    totalPriceInitialState
-  );
+  // const [totalPriceState, totalPriceDispatcher] = React.useReducer(
+  //   reducer,
+  //   totalPriceInitialState
+  // );
 
   const { bun, ingredients } = {
     bun: items.find((item) => item.type === "bun"),
     ingredients: items.filter((item) => item.type !== "bun"),
   };
 
-  React.useEffect(() => {
-    if (bun) {
-      totalPriceDispatcher({ type: "add", payload: bun.price * 2 });
-    }
-    if (ingredients) {
-      totalPriceDispatcher({
-        type: "add",
-        payload: ingredients.reduce(
-          (acc, ingredient) => acc + ingredient.price,
-          0
-        ),
-      });
-    }
-  }, [items]);
+  // React.useEffect(() => {
+  //   if (bun) {
+  //     totalPriceDispatcher({ type: "add", payload: bun.price * 2 });
+  //   }
+  //   if (ingredients) {
+  //     totalPriceDispatcher({
+  //       type: "add",
+  //       payload: ingredients.reduce(
+  //         (acc, ingredient) => acc + ingredient.price,
+  //         0
+  //       ),
+  //     });
+  //   }
+  // }, [items]);
 
   // const totalPrice =
   //   ingredients.reduce((acc, ingredient) => acc + ingredient.price, 0) +
   //   bun.price * 2;
 
+  const totalPrice = React.useMemo(() => {
+    return (
+      ingredients.reduce((acc, ingredient) => acc + ingredient.price, 0) +
+      bun.price * 2
+    );
+  }, [bun, ingredients]);
+
   const submitOrder = () => {
     const ingredientsId = items.map((ingredient) => ingredient._id);
+    ingredientsId.push(bun._id);
     createOrder(ingredientsId)
       .then((res) => {
         setOrderNumber(res.order.number);
@@ -110,7 +108,7 @@ const BurgerConstructor = () => {
         </div>
         <div className={`${styles.info} pr-4`}>
           <p className={`${styles.price} text text_type_digits-medium mr-10`}>
-            <span>{totalPrice.price}</span>
+            <span>{totalPrice}</span>
 
             <CurrencyIcon type="primary" />
           </p>
