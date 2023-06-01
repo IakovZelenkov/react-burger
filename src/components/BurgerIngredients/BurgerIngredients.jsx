@@ -1,19 +1,25 @@
 import React from "react";
-import PropTypes from "prop-types";
-import ingredientType from "../../utils/types.js";
 import styles from "./BurgerIngredients.module.scss";
 
 import Tabs from "../Tabs/Tabs";
 import IngredientsSection from "../IngredientsSection/IngredientsSection";
 
-const BurgerIngredients = ({ items }) => {
+import { useSelector, useDispatch } from "react-redux";
+
+const BurgerIngredients = () => {
+  const ingredients = useSelector(
+    (state) => state.burgerIngredients.ingredients
+  );
+
+  const dispatch = useDispatch();
+
   const ingredientTitles = {
     bun: "Булки",
     main: "Начинки",
     sauce: "Соусы",
   };
 
-  const ingredientsSorted = items.reduce((acc, item) => {
+  const ingredientsSorted = ingredients.reduce((acc, item) => {
     if (!acc[item.type]) {
       acc[item.type] = [];
     }
@@ -38,10 +44,6 @@ const BurgerIngredients = ({ items }) => {
       </div>
     </div>
   );
-};
-
-BurgerIngredients.propTypes = {
-  items: PropTypes.arrayOf(ingredientType.isRequired).isRequired,
 };
 
 export default BurgerIngredients;
