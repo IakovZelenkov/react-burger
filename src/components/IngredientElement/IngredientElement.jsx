@@ -2,6 +2,11 @@ import React from "react";
 import ingredientType from "../../utils/types.js";
 import Modal from "../Modal/Modal";
 import IngredientDetails from "../IngredientDetails/IngredientDetails.jsx";
+import { useDispatch } from "react-redux";
+import {
+  setSelectedIngredient,
+  resetSelectedIngredient,
+} from "../../services/slices/ingredientDetailsSlice.js";
 
 import styles from "./IngredientElement.module.scss";
 import {
@@ -12,10 +17,17 @@ import {
 const IngredientElement = ({ ingredient }) => {
   const { image, price, name, amount } = ingredient;
   const [isOpen, setIsOpen] = React.useState(false);
+  const dispatch = useDispatch();
 
   return (
     <>
-      <li className={`${styles.wrapper}`} onClick={() => setIsOpen(true)}>
+      <li
+        className={`${styles.wrapper}`}
+        onClick={() => {
+          dispatch(setSelectedIngredient(ingredient));
+          setIsOpen(true);
+        }}
+      >
         {amount > 0 && <Counter count={amount} size="default" />}
         <img src={image} alt="Ингредиент" className={styles.image} />
         <div className={styles.priceInfo}>
@@ -25,8 +37,13 @@ const IngredientElement = ({ ingredient }) => {
         <p className="text text_type_main-default">{name}</p>
       </li>
       {isOpen && (
-        <Modal onClose={() => setIsOpen(false)}>
-          <IngredientDetails ingredient={ingredient} />
+        <Modal
+          onClose={() => {
+            dispatch(resetSelectedIngredient());
+            setIsOpen(false);
+          }}
+        >
+          <IngredientDetails />
         </Modal>
       )}
     </>
