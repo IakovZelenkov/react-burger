@@ -7,6 +7,7 @@ import {
   setSelectedIngredient,
   resetSelectedIngredient,
 } from "../../services/slices/ingredientDetailsSlice.js";
+import { useDrag } from "react-dnd";
 
 import styles from "./IngredientElement.module.scss";
 import {
@@ -19,6 +20,11 @@ const IngredientElement = ({ ingredient }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const dispatch = useDispatch();
 
+  const [, dragRef, dragPreviewRef] = useDrag({
+    type: "ingredient",
+    item: ingredient,
+  });
+
   return (
     <>
       <li
@@ -26,10 +32,17 @@ const IngredientElement = ({ ingredient }) => {
         onClick={() => {
           dispatch(setSelectedIngredient(ingredient));
           setIsOpen(true);
+          // dispatch(addIngredient(ingredient));
         }}
+        ref={dragRef}
       >
         {amount > 0 && <Counter count={amount} size="default" />}
-        <img src={image} alt="Ингредиент" className={styles.image} />
+        <img
+          src={image}
+          alt="Ингредиент"
+          className={styles.image}
+          ref={dragPreviewRef}
+        />
         <div className={styles.priceInfo}>
           <span className="text text_type_main-medium">{price}</span>
           <CurrencyIcon type="primary" />

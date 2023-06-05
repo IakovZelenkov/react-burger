@@ -41,26 +41,14 @@ const BurgerIngredients = () => {
     }
   }, [bunInView, mainInView, sauceInView]);
 
-  const { buns, mains, sauces } = React.useMemo(() => {
-    return ingredients.reduce(
-      (count, item) => {
-        switch (item.type) {
-          case "bun":
-            count.buns.push(item);
-            break;
-          case "sauce":
-            count.sauces.push(item);
-            break;
-          case "main":
-            count.mains.push(item);
-            break;
-          default:
-            break;
-        }
-        return count;
-      },
-      { buns: [], mains: [], sauces: [] }
-    );
+  const ingredientsSorted = React.useMemo(() => {
+    return ingredients.reduce((acc, item) => {
+      if (!acc[item.type]) {
+        acc[item.type] = [];
+      }
+      acc[item.type].push(item);
+      return acc;
+    }, {});
   }, [ingredients]);
 
   return (
@@ -72,7 +60,6 @@ const BurgerIngredients = () => {
       <div className={`${styles.tabs} pb-10`}>
         <Tab
           active={active === "bun"}
-          value="bun"
           onClick={() => {
             setActive();
             bunRef.titleRef.current.scrollIntoView({ behavior: "smooth" });
@@ -82,7 +69,6 @@ const BurgerIngredients = () => {
         </Tab>
         <Tab
           active={active === "main"}
-          value="main"
           onClick={() => {
             setActive();
             mainRef.titleRef.current.scrollIntoView({ behavior: "smooth" });
@@ -92,7 +78,6 @@ const BurgerIngredients = () => {
         </Tab>
         <Tab
           active={active === "sauce"}
-          value="sauce"
           onClick={() => {
             setActive();
             sauceRef.titleRef.current.scrollIntoView({ behavior: "smooth" });
@@ -101,19 +86,25 @@ const BurgerIngredients = () => {
           Соусы
         </Tab>
       </div>
-      <div className={`${styles.wrapper} scroller`}>
-        <IngredientsSection title="Булки" ingredients={buns} ref={bunRef} />
-        <IngredientsSection
-          title="Начинки"
-          ingredients={mains}
-          ref={mainRef}
-        />
-        <IngredientsSection
-          title="Соусы"
-          ingredients={sauces}
-          ref={sauceRef}
-        />
-      </div>
+      {ingredientsSorted.bun && (
+        <div className={`${styles.wrapper} scroller`}>
+          <IngredientsSection
+            title="Булки"
+            ingredients={ingredientsSorted.bun}
+            ref={bunRef}
+          />
+          <IngredientsSection
+            title="Начинки"
+            ingredients={ingredientsSorted.main}
+            ref={mainRef}
+          />
+          <IngredientsSection
+            title="Соусы"
+            ingredients={ingredientsSorted.sauce}
+            ref={sauceRef}
+          />
+        </div>
+      )}
     </div>
   );
 };

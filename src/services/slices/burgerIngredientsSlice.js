@@ -4,7 +4,7 @@ import { getIngredients } from "../../utils/burger-api";
 const initialState = {
   ingredients: [],
   ingredientsRequest: false,
-  ingredientsError: null,
+  ingredientsFailed: false,
 };
 
 const burgerIngredientsSlice = createSlice({
@@ -16,11 +16,11 @@ const burgerIngredientsSlice = createSlice({
     },
     getIngredientsSuccess: (state, action) => {
       state.ingredientsRequest = false;
-      state.ingredientsError = false;
+      state.ingredientsFailed = false;
       state.ingredients = action.payload;
     },
-    getIngredientsError: (state) => {
-      state.ingredientsError = true;
+    getIngredientsFailed: (state) => {
+      state.ingredientsFailed = true;
       state.ingredientsRequest = false;
     },
   },
@@ -34,14 +34,14 @@ export const getIngredient = () => (dispatch) => {
     })
     .catch((err) => {
       console.error(err.message);
-      dispatch(getIngredientsError());
+      dispatch(getIngredientsFailed());
     });
 };
 
 export const {
   getIngredientsRequest,
   getIngredientsSuccess,
-  getIngredientsError,
+  getIngredientsFailed,
 } = burgerIngredientsSlice.actions;
 
 export default burgerIngredientsSlice.reducer;
