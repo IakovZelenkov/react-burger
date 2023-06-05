@@ -1,22 +1,20 @@
 import React from "react";
 import Modal from "../Modal/Modal";
 import OrderDetails from "../OrderDetails/OrderDetails.jsx";
+import ConstructorIngredient from "./ConstructorIngredient/ConstructorIngredient";
 import {
   ConstructorElement,
-  DragIcon,
   CurrencyIcon,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./BurgerConstructor.module.scss";
 
-import { createOrder } from "../../utils/burger-api";
-
 import { useSelector, useDispatch } from "react-redux";
 
 import {
   addIngredient,
-  deleteIngredient,
   resetIngredients,
+  increaseIngredientCount,
 } from "../../services/slices/burgerConstructorSlice";
 
 import {
@@ -29,13 +27,13 @@ import { v4 as uuidv4 } from "uuid";
 
 const BurgerConstructor = () => {
   const [isOpen, setIsOpen] = React.useState(false);
-  const [orderNumber, setOrderNumber] = React.useState(0);
   const dispatch = useDispatch();
   const ingredientsListRef = React.useRef();
 
-  const { bun, ingredients } = useSelector((state) => ({
+  const { bun, ingredients, orderNumber } = useSelector((state) => ({
     bun: state.burgerConstructor.bun,
     ingredients: state.burgerConstructor.ingredients,
+    orderNumber: state.orderDetails.orderNumber,
   }));
 
   const totalPrice =
@@ -48,6 +46,7 @@ const BurgerConstructor = () => {
       return;
     }
     dispatch(addIngredient({ uniqueID: uuidv4(), ingredient }));
+    dispatch(increaseIngredientCount(ingredient));
 
     setTimeout(() => {
       ingredientsListRef.current.scroll({
@@ -67,26 +66,11 @@ const BurgerConstructor = () => {
     },
   });
 
-  // const submitOrder = () => {
-  //   const ingredientsId = ingredients.map((ingredient) => ingredient._id);
-  //   ingredientsId.push(bun._id);
-  //   ingredientsId.unshift(bun._id);
-  //   createOrder(ingredientsId)
-  //     .then((res) => {
-  //       setOrderNumber(res.order.number);
-  //       setIsOpen(true);
-  //     })
-  //     .catch((err) => {
-  //       console.error(err);
-  //     });
-  // };
-
-  const handleSubmitOrder = (bun, ingredients) => {
-    console.log(ingredients);
-    dispatch(submitOrder(bun, ingredients));
-    setIsOpen(true);
-    // dispatch();
-  };
+  React.useEffect(() => {
+    if (orderNumber !== undefined) {
+      setIsOpen(true);
+    }
+  }, [orderNumber]);
 
   return (
     <>
@@ -95,7 +79,6 @@ const BurgerConstructor = () => {
           className={
             isHover ? `${styles.hoverDND} mb-10` : `${styles.order} mb-10`
           }
-          // className={`${isHover ? styles.hoverDND : ${styles.order}}  mb-10`}
           ref={dropTarget}
         >
           <div className={`${styles.item} pl-8`} style={{ minWidth: "568px" }}>
@@ -114,15 +97,7 @@ const BurgerConstructor = () => {
           <ul className={`${styles.list} scroller`} ref={ingredientsListRef}>
             {ingredients.map((item, index) => (
               <li key={item._id + index} className={`${styles.item} pl-8`}>
-                <div className={styles.icon}>
-                  <DragIcon />
-                </div>
-                <ConstructorElement
-                  text={item.name}
-                  price={item.price}
-                  thumbnail={item.image}
-                  handleClose={() => dispatch(deleteIngredient(item))}
-                />
+                <ConstructorIngredient item={item} index={index} />
               </li>
             ))}
           </ul>
@@ -151,7 +126,7 @@ const BurgerConstructor = () => {
             type="primary"
             size="medium"
             onClick={() => {
-              handleSubmitOrder(bun, ingredients);
+              dispatch(submitOrder(bun, ingredients));
             }}
             disabled={!bun || ingredients.length === 0}
           >
@@ -164,9 +139,10 @@ const BurgerConstructor = () => {
           onClose={() => {
             dispatch(resetOrder());
             setIsOpen(false);
+            dispatch(resetIngredients());
           }}
         >
-          <OrderDetails orderNumber={orderNumber} />
+          <OrderDetails />
         </Modal>
       )}
     </>

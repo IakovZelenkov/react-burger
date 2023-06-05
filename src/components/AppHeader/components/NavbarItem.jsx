@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import styles from "./NavbarItem.module.scss";
 
 const NavbarItem = ({ title, Logo, active = false }) => {
-  // const [active, setActive] = React.useState(0);
   return (
     <li className={styles.item}>
       <a
