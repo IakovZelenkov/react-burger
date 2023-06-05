@@ -27,8 +27,16 @@ import {
 import { useDrop } from "react-dnd";
 import { v4 as uuidv4 } from "uuid";
 
+import {
+  openOrderDetailsModal,
+  closeOrderDetailsModalOpen,
+} from "../../services/slices/modalSlice.js";
+
 const BurgerConstructor = () => {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const orderDetailsModalOpen = useSelector(
+    (state) => state.modal.orderDetailsModalOpen
+  );
+
   const dispatch = useDispatch();
   const ingredientsListRef = React.useRef();
 
@@ -123,7 +131,7 @@ const BurgerConstructor = () => {
             size="medium"
             onClick={() => {
               dispatch(submitOrder(bun, ingredients));
-              setIsOpen(true);
+              dispatch(openOrderDetailsModal());
             }}
             disabled={!bun || ingredients.length === 0}
           >
@@ -131,11 +139,11 @@ const BurgerConstructor = () => {
           </Button>
         </div>
       </div>
-      {isOpen && (
+      {orderDetailsModalOpen && (
         <Modal
           onClose={() => {
+            dispatch(closeOrderDetailsModalOpen());
             dispatch(resetOrder());
-            setIsOpen(false);
             dispatch(resetIngredients());
             dispatch(resetIngredientCount());
           }}

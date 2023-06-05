@@ -1,6 +1,5 @@
 import React from "react";
 import ingredientType from "../../utils/types.js";
-import Modal from "../Modal/Modal";
 import IngredientDetails from "../IngredientDetails/IngredientDetails.jsx";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -8,6 +7,7 @@ import {
   resetSelectedIngredient,
 } from "../../services/slices/ingredientDetailsSlice.js";
 import { useDrag } from "react-dnd";
+import { openIngredientDetailsModal } from "../../services/slices/modalSlice.js";
 
 import styles from "./IngredientElement.module.scss";
 import {
@@ -17,7 +17,6 @@ import {
 
 const IngredientElement = ({ ingredient }) => {
   const { image, price, name, _id } = ingredient;
-  const [isOpen, setIsOpen] = React.useState(false);
   const dispatch = useDispatch();
   const ingredientsCount = useSelector(
     (state) => state.burgerConstructor.ingredientsCount
@@ -34,7 +33,7 @@ const IngredientElement = ({ ingredient }) => {
         className={`${styles.wrapper}`}
         onClick={() => {
           dispatch(setSelectedIngredient(ingredient));
-          setIsOpen(true);
+          dispatch(openIngredientDetailsModal());
         }}
         ref={dragRef}
       >
@@ -53,16 +52,6 @@ const IngredientElement = ({ ingredient }) => {
         </div>
         <p className="text text_type_main-default">{name}</p>
       </li>
-      {isOpen && (
-        <Modal
-          onClose={() => {
-            dispatch(resetSelectedIngredient());
-            setIsOpen(false);
-          }}
-        >
-          <IngredientDetails />
-        </Modal>
-      )}
     </>
   );
 };
