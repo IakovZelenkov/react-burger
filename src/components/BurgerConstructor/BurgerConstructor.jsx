@@ -1,6 +1,7 @@
 import React from "react";
 import Modal from "../Modal/Modal";
 import OrderDetails from "../OrderDetails/OrderDetails.jsx";
+import Loader from "../Loader/Loader";
 import ConstructorIngredient from "./ConstructorIngredient/ConstructorIngredient";
 import {
   ConstructorElement,
@@ -15,6 +16,7 @@ import {
   addIngredient,
   resetIngredients,
   increaseIngredientCount,
+  resetIngredientCount,
 } from "../../services/slices/burgerConstructorSlice";
 
 import {
@@ -66,12 +68,6 @@ const BurgerConstructor = () => {
     },
   });
 
-  React.useEffect(() => {
-    if (orderNumber !== undefined) {
-      setIsOpen(true);
-    }
-  }, [orderNumber]);
-
   return (
     <>
       <div className={`${styles.wrapper} mt-25 `}>
@@ -81,7 +77,7 @@ const BurgerConstructor = () => {
           }
           ref={dropTarget}
         >
-          <div className={`${styles.item} pl-8`} style={{ minWidth: "568px" }}>
+          <div className={`${styles.item} pl-8`}>
             {bun === undefined ? (
               <h3 className={`${styles.temp}`}>Перенесите сюда булку</h3>
             ) : (
@@ -96,7 +92,7 @@ const BurgerConstructor = () => {
           </div>
           <ul className={`${styles.list} scroller`} ref={ingredientsListRef}>
             {ingredients.map((item, index) => (
-              <li key={item._id + index} className={`${styles.item} pl-8`}>
+              <li key={item.uniqueID} className={`${styles.item} pl-8`}>
                 <ConstructorIngredient item={item} index={index} />
               </li>
             ))}
@@ -127,6 +123,7 @@ const BurgerConstructor = () => {
             size="medium"
             onClick={() => {
               dispatch(submitOrder(bun, ingredients));
+              setIsOpen(true);
             }}
             disabled={!bun || ingredients.length === 0}
           >
@@ -140,9 +137,10 @@ const BurgerConstructor = () => {
             dispatch(resetOrder());
             setIsOpen(false);
             dispatch(resetIngredients());
+            dispatch(resetIngredientCount());
           }}
         >
-          <OrderDetails />
+          {orderNumber === undefined ? <Loader /> : <OrderDetails />}
         </Modal>
       )}
     </>

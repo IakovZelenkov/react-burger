@@ -1,21 +1,22 @@
 import BASE_URL from "./constats";
 
+const request = (url, options) => {
+  return fetch(url, options).then(checkResponse);
+};
+
 const checkResponse = (res) => {
   return res.ok ? res.json() : Promise.reject(res.status);
 };
 
-export const getIngredients = () => {
-  return fetch(`${BASE_URL}/ingredients`).then((res) => checkResponse(res));
-};
+export const getIngredients = () => request(`${BASE_URL}/ingredients`);
 
-export const createOrder = (ingredients) => {
-  return fetch(`${BASE_URL}/orders`, {
+export const createOrder = (ingredientsId) =>
+  request(`${BASE_URL}/orders`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      ingredients: ingredients,
+      ingredients: ingredientsId,
     }),
-  }).then((res) => checkResponse(res));
-};
+  });
