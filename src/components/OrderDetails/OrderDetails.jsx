@@ -1,7 +1,6 @@
 import React from "react";
 import styles from "./OrderDetails.module.scss";
 import doneIcon from "../../images/doneIcon.svg";
-import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 
 const OrderDetails = () => {

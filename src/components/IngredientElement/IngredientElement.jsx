@@ -1,11 +1,7 @@
 import React from "react";
 import ingredientType from "../../utils/types.js";
-import IngredientDetails from "../IngredientDetails/IngredientDetails.jsx";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  setSelectedIngredient,
-  resetSelectedIngredient,
-} from "../../services/slices/ingredientDetailsSlice.js";
+import { setSelectedIngredient } from "../../services/slices/ingredientDetailsSlice.js";
 import { useDrag } from "react-dnd";
 import { openIngredientDetailsModal } from "../../services/slices/modalSlice.js";
 
