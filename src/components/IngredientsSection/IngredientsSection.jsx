@@ -4,18 +4,21 @@ import ingredientType from "../../utils/types.js";
 import styles from "./IngredientsSection.module.scss";
 import IngredientElement from "../IngredientElement/IngredientElement";
 
-const IngredientsSection = ({ title, ingredients }) => {
+const IngredientsSection = React.forwardRef(({ title, ingredients }, ref) => {
+  const { titleRef, inViewRef } = ref;
   return (
     <div className={`${styles.section}`}>
-      <h2 className="title text text_type_main-medium mb-6">{title}</h2>
-      <ul className={`${styles.list}`}>
+      <h2 ref={titleRef} className="title text text_type_main-medium mb-6">
+        {title}
+      </h2>
+      <ul ref={inViewRef} className={`${styles.list}`}>
         {ingredients.map((ingredient) => (
           <IngredientElement key={ingredient._id} ingredient={ingredient} />
         ))}
       </ul>
     </div>
   );
-};
+});
 
 IngredientsSection.propTypes = {
   ingredients: PropTypes.arrayOf(ingredientType.isRequired).isRequired,

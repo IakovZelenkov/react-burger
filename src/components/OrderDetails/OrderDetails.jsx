@@ -1,9 +1,10 @@
 import React from "react";
 import styles from "./OrderDetails.module.scss";
 import doneIcon from "../../images/doneIcon.svg";
-import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
 
-const OrderDetails = ({ orderNumber }) => {
+const OrderDetails = () => {
+  const orderNumber = useSelector((state) => state.orderDetails.orderNumber);
   return (
     <div className={styles.container}>
       <h2
@@ -24,7 +25,3 @@ const OrderDetails = ({ orderNumber }) => {
 };
 
 export default OrderDetails;
-
-OrderDetails.propTypes = {
-  orderNumber: PropTypes.number.isRequired,
-};
