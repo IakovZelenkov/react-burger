@@ -14,10 +14,10 @@ const AppHeader = () => {
     <header className={`${styles.header} pt-4 pb-4`}>
       <nav className={styles.nav}>
         <ul className={styles.wrapper}>
-          <NavbarItem title="Конструктор" Logo={BurgerIcon} active={true} />
-          <NavbarItem title="Лента заказов" Logo={ListIcon} />
+          <NavbarItem title="Конструктор" Logo={BurgerIcon} to="/" />
+          <NavbarItem title="Лента заказов" Logo={ListIcon} to="/feed" />
         </ul>
-        <NavbarItem title="Личный кабинет" Logo={ProfileIcon} />
+        <NavbarItem title="Личный кабинет" Logo={ProfileIcon} to="/profile" />
       </nav>
       <div className={styles.logo}>
         <Logo />

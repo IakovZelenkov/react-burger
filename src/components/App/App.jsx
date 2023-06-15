@@ -1,14 +1,18 @@
 import React from "react";
 import styles from "./App.module.scss";
-
-import AppHeader from "../AppHeader/AppHeader";
-
-import BurgerIngredients from "../BurgerIngredients/BurgerIngredients";
-import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { getIngredient } from "../../services/slices/burgerIngredientsSlice";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+
+import { OnlyAuth, OnlyUnAuth } from "../ProtectedRoute/ProtectedRoute";
+import AppHeader from "../AppHeader/AppHeader";
+import HomePage from "../../pages/home/home";
+import LoginPage from "../../pages/login/login";
+import RegisterPage from "../../pages/register/register";
+import ForgotPasswordPage from "../../pages/forgot-password/forgot-password";
+import ResetPasswordPage from "../../pages/reset-password/reset-password";
+import ProfilePage from "../../pages/profile/profile";
+import IngredientsPage from "../../pages/ingredients/ingredients";
 
 function App() {
   const dispatch = useDispatch();
@@ -19,13 +23,33 @@ function App() {
 
   return (
     <div className={styles.app}>
-      <AppHeader />
-      <DndProvider backend={HTML5Backend}>
-        <div className={styles.container}>
-          <BurgerIngredients />
-          <BurgerConstructor />
-        </div>
-      </DndProvider>
+      <BrowserRouter>
+        <AppHeader />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route
+            path="/login"
+            element={<OnlyUnAuth component={<LoginPage />} />}
+          />
+          <Route
+            path="/register"
+            element={<OnlyUnAuth component={<RegisterPage />} />}
+          />
+          <Route
+            path="/forgot-password"
+            element={<OnlyUnAuth component={<ForgotPasswordPage />} />}
+          />
+          <Route
+            path="/reset-password"
+            element={<OnlyUnAuth component={<ResetPasswordPage />} />}
+          />
+          <Route
+            path="/profile"
+            element={<OnlyAuth component={<ProfilePage />} />}
+          />
+          <Route path="/ingredients/:id" element={<IngredientsPage />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
