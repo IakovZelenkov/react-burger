@@ -149,6 +149,7 @@ const BurgerConstructor = () => {
           }}
         >
           {orderNumber === undefined ? <Loader /> : <OrderDetails />}
+          {/* <Loader /> */}
         </Modal>
       )}
     </>
