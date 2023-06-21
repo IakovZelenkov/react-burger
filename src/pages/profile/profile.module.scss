@@ -1,0 +1,42 @@
+.container {
+  display: flex;
+  margin: 120px auto;
+  max-width: 860px;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  margin-right: 60px;
+  width: 320px;
+}
+
+.navItems {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  list-style: none;
+  margin: 0 0 80px;
+  padding: 0;
+}
+
+.navItem {
+  padding: 17px 0;
+}
+
+.link {
+  text-decoration: none;
+  transition: color 0.2s ease-in;
+}
+
+.link:hover {
+  color: #f2f2f3;
+}
+
+.active {
+  color: #f2f2f3;
+}
+
+.description {
+  opacity: 0.4;
+}

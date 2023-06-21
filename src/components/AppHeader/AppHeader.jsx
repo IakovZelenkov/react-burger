@@ -6,7 +6,7 @@ import {
   BurgerIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./AppHeader.module.scss";
-
+import { Link } from "react-router-dom";
 import NavbarItem from "./components/NavbarItem";
 
 const AppHeader = () => {
@@ -20,7 +20,9 @@ const AppHeader = () => {
         <NavbarItem title="Личный кабинет" Logo={ProfileIcon} to="/profile" />
       </nav>
       <div className={styles.logo}>
-        <Logo />
+        <Link to="/">
+          <Logo />
+        </Link>
       </div>
     </header>
   );

@@ -27,7 +27,7 @@ const initialState = {
   },
   resetPasswordForm: {
     password: "",
-    code: "",
+    token: "",
     request: false,
     failed: false,
   },
@@ -51,11 +51,13 @@ export const authSlice = createSlice({
     setUserFailed: (state) => {
       state.user.request = false;
       state.user.failed = true;
+      state.user.user = null;
     },
     setFormValue: (state, action) => {
       const { value, fieldName, formName } = action.payload;
       state[formName][fieldName] = value;
     },
+
     submitRequest: (state, action) => {
       state[action.payload].request = true;
     },
@@ -67,6 +69,18 @@ export const authSlice = createSlice({
     submitFailed: (state, action) => {
       state[action.payload].request = false;
       state[action.payload].failed = true;
+    },
+    logoutRequest: (state) => {
+      state.user.request = true;
+    },
+    logoutSuccess: (state) => {
+      state.user.request = false;
+      state.user.failed = false;
+      state.user.user = null;
+    },
+    logoutFailed: (state) => {
+      state.user.request = false;
+      state.user.failed = true;
     },
   },
 });
@@ -80,6 +94,9 @@ export const {
   submitRequest,
   submitSuccess,
   submitFailed,
+  logoutRequest,
+  logoutSuccess,
+  logoutFailed,
 } = authSlice.actions;
 
 export default authSlice.reducer;

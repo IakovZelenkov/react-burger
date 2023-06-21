@@ -12,9 +12,3 @@ export const setToken = (name, value) => {
     });
   }
 };
-
-export const getToken = (name) => {
-  Cookies.get(name);
-};
-
-export const removeToken = (name) => Cookies.remove(name);

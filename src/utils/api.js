@@ -1,9 +1,10 @@
 import BASE_URL from "./constats";
-import { setToken, getToken, removeToken } from "./cookie";
+import { setToken } from "./cookie";
 
-const request = async (url, options) => {
-  const res = await fetch(url, options);
-  return checkResponse(res);
+import Cookies from "js-cookie";
+
+const request = (url, options) => {
+  return fetch(url, options).then(checkResponse);
 };
 
 const checkResponse = (res) => {
@@ -17,13 +18,14 @@ export const createOrder = (ingredientsId) =>
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      authorization: "Bearer " + Cookies.get("accessToken"),
     },
     body: JSON.stringify({
       ingredients: ingredientsId,
     }),
   });
 
-export const registerUserRequest = (name, email, password) => {
+export const registerUserRequest = (name, email, password) =>
   request(`${BASE_URL}/auth/register`, {
     method: "POST",
     headers: {
@@ -35,9 +37,8 @@ export const registerUserRequest = (name, email, password) => {
       name: name,
     }),
   });
-};
 
-export const loginUserRequest = (email, password) => {
+export const loginUserRequest = (email, password) =>
   request(`${BASE_URL}/auth/login`, {
     method: "POST",
     headers: {
@@ -48,24 +49,34 @@ export const loginUserRequest = (email, password) => {
       password: password,
     }),
   });
-};
 
-export const getUserRequest = async () => {
-  return await fetchWithRefresh(`${BASE_URL}/auth/user`, {
+export const logoutUserRequest = () =>
+  request(`${BASE_URL}/auth/logout`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      token: Cookies.get("refreshToken"),
+    }),
+  });
+
+export const getUserRequest = () => {
+  return fetchWithRefresh(`${BASE_URL}/auth/user`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer " + getToken("accessToken"),
+      authorization: "Bearer " + Cookies.get("accessToken"),
     },
   });
 };
 
-export const updateUserRequest = async (name, email, password) => {
-  return await fetchWithRefresh(`${BASE_URL}/auth/user`, {
+export const updateUserRequest = (name, email, password) => {
+  return fetchWithRefresh(`${BASE_URL}/auth/user`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer " + getToken("accessToken"),
+      authorization: "Bearer " + Cookies.get("accessToken"),
     },
     body: JSON.stringify({
       email: email,
@@ -75,14 +86,37 @@ export const updateUserRequest = async (name, email, password) => {
   });
 };
 
+export const forgotPasswordRequest = (email) =>
+  request(`${BASE_URL}/password-reset`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email: email,
+    }),
+  });
+
+export const resetPasswordRequest = (password, token) =>
+  request(`${BASE_URL}/password-reset/reset`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      password: password,
+      token: token,
+    }),
+  });
+
 export const refreshToken = () => {
   request(`${BASE_URL}/auth/token`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json;charset=utf-8",
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      token: getToken("refreshToken"),
+      token: Cookies.get("refreshToken"),
     }),
   });
 };

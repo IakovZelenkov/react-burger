@@ -6,19 +6,19 @@ import {
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setFormValue } from "../../services/slices/authSlice";
 import { loginUser } from "../../services/actions/authActions";
 import Loader from "../../components/Loader/Loader";
 
 const LoginPage = () => {
-  const { email, password, submit } = useSelector((state) => ({
+  const { email, password, request } = useSelector((state) => ({
     email: state.auth.loginForm.email,
     password: state.auth.loginForm.password,
-    submit: state.auth.loginForm.submit,
+    request: state.auth.loginForm.request,
   }));
-  const navigate = useNavigate();
+
   const dispatch = useDispatch();
 
   const onChange = (evt) => {
@@ -28,14 +28,14 @@ const LoginPage = () => {
 
   const onSubmit = (evt) => {
     evt.preventDefault();
-    dispatch(loginUser(email, password, () => navigate("/")));
+    dispatch(loginUser(email, password));
   };
 
   return (
     <div className={styles.container}>
       <h2 className="text text_type_main-medium mb-6">Вход</h2>
       <form name="login" className={styles.form} onSubmit={onSubmit}>
-        {submit ? (
+        {request ? (
           <Loader />
         ) : (
           <>

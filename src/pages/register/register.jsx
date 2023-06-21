@@ -7,20 +7,20 @@ import {
   Input,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setFormValue } from "../../services/slices/authSlice";
 import { registerUser } from "../../services/actions/authActions";
 import Loader from "../../components/Loader/Loader";
 
 const RegisterPage = () => {
-  const { name, email, password, submit } = useSelector((state) => ({
+  const { name, email, password, request } = useSelector((state) => ({
     name: state.auth.registerForm.name,
     email: state.auth.registerForm.email,
     password: state.auth.registerForm.password,
-    submit: state.auth.registerForm.submit,
+    request: state.auth.registerForm.request,
   }));
-  const navigate = useNavigate();
+
   const dispatch = useDispatch();
 
   const onChange = (evt) => {
@@ -32,17 +32,16 @@ const RegisterPage = () => {
 
   const onSubmit = (evt) => {
     evt.preventDefault();
-    dispatch(registerUser(name, email, password, () => navigate("/login")));
+    dispatch(registerUser(name, email, password));
   };
   return (
     <div className={styles.container}>
       <h2 className="text text_type_main-medium mb-6">Регистрация</h2>
       <form name="login" className={styles.form} onSubmit={onSubmit}>
-        {submit ? (
+        {request ? (
           <Loader />
         ) : (
           <>
-            {" "}
             <Input
               value={name}
               onChange={onChange}

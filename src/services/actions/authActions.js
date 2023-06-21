@@ -1,5 +1,13 @@
-// import { api } from "../utils/api";
-import { setToken, getToken, removeToken } from "../../utils/cookie";
+import {
+  getUserRequest,
+  registerUserRequest,
+  loginUserRequest,
+  updateUserRequest,
+  logoutUserRequest,
+  forgotPasswordRequest,
+  resetPasswordRequest,
+} from "../../utils/api";
+import { setToken } from "../../utils/cookie";
 import {
   setAuthChecked,
   setUserRequest,
@@ -8,19 +16,91 @@ import {
   submitRequest,
   submitSuccess,
   submitFailed,
+  logoutRequest,
+  logoutSuccess,
+  logoutFailed,
 } from "../slices/authSlice";
-
-// export const getUser = () => {
-//   return (dispatch) => {
-//     return api.getUser().then((res) => {
-//       dispatch(setUser(res.user));
-//     });
-//   };
-// };
+import Cookies from "js-cookie";
 
 export const getUser = () => (dispatch) => {
   dispatch(setUserRequest());
-  getUserTest()
+  getUserRequest()
+    .then((res) => {
+      dispatch(setUserSuccess(res.user));
+      dispatch(setAuthChecked(true));
+    })
+    .catch((err) => {
+      console.error(err.message);
+      Cookies.remove("accessToken");
+      Cookies.remove("refreshToken");
+      dispatch(setUserFailed());
+    });
+};
+
+export const registerUser = (name, email, password) => (dispatch) => {
+  dispatch(submitRequest("registerForm"));
+  registerUserRequest(name, email, password)
+    .then((res) => {
+      setToken("accessToken", res.accessToken);
+      setToken("refreshToken", res.refreshToken);
+      return res;
+    })
+    .then((res) => {
+      dispatch(submitSuccess("registerForm"));
+      dispatch(setUserSuccess(res.user));
+
+      dispatch(setAuthChecked(true));
+    })
+    .catch((err) => {
+      console.error(err.message);
+      dispatch(submitFailed("registerForm"));
+    });
+};
+
+export const loginUser = (email, password) => (dispatch) => {
+  dispatch(submitRequest("loginForm"));
+  loginUserRequest(email, password)
+    .then((res) => {
+      setToken("accessToken", res.accessToken);
+      setToken("refreshToken", res.refreshToken);
+      return res;
+    })
+    .then((res) => {
+      dispatch(submitSuccess("loginForm"));
+      dispatch(setUserSuccess(res.user));
+      dispatch(setAuthChecked(true));
+    })
+    .catch((err) => {
+      console.error(err.message);
+      dispatch(submitFailed("loginForm"));
+    });
+};
+
+export const logoutUser = () => (dispatch) => {
+  dispatch(logoutRequest());
+  logoutUserRequest()
+    .then(() => {
+      dispatch(logoutSuccess());
+      Cookies.remove("accessToken");
+      Cookies.remove("refreshToken");
+    })
+    .catch((err) => {
+      console.error(err.message);
+      dispatch(logoutFailed());
+    });
+};
+
+export const checkUserAuth = () => (dispatch) => {
+  if (Cookies.get("accessToken")) {
+    dispatch(getUser());
+  } else {
+    dispatch(setAuthChecked(true));
+  }
+};
+
+export const updateUser = (name, email, password) => (dispatch) => {
+  dispatch(setUserRequest());
+  updateUserRequest(name, email, password)
     .then((res) => {
       dispatch(setUserSuccess(res.user));
     })
@@ -30,64 +110,32 @@ export const getUser = () => (dispatch) => {
     });
 };
 
-export const registerUser =
-  (name, email, password, callback) => (dispatch) => {
-    dispatch(submitRequest("registerForm"));
-    registerRequestTest(name, email, password)
-      .then((res) => {
-        setToken("accessToken", res.accessToken);
-        setToken("refreshToken", res.refreshToken);
-      })
-      .then((res) => {
-        dispatch(submitSuccess("registerForm"));
-        dispatch(setUserSuccess(res.user));
-        dispatch(setAuthChecked(true));
-        callback();
-      })
-      .catch((err) => {
-        console.error(err.message);
-        dispatch(submitFailed("registerForm"));
-      });
-  };
-
-export const loginUser = (email, password, callback) => (dispatch) => {
-  dispatch(submitRequest("loginForm"));
-  loginUserTest(email, password)
-    .then((res) => {
-      setToken("accessToken", res.accessToken);
-      setToken("refreshToken", res.refreshToken);
+export const forgotPassword = (email, redirect) => (dispatch) => {
+  dispatch(submitRequest("forgotPasswordForm"));
+  forgotPasswordRequest(email)
+    .then(() => {
+      localStorage.setItem("forgotPassword", "success");
+      dispatch(submitSuccess("forgotPasswordForm"));
+      redirect();
     })
-    .then((res) => {
-      dispatch(submitSuccess("loginForm"));
-      dispatch(setUserSuccess(res.user));
-      dispatch(setAuthChecked(true));
-      callback();
-    })
-
     .catch((err) => {
       console.error(err.message);
-      dispatch(submitFailed("loginForm"));
+      dispatch(submitFailed("forgotPasswordForm"));
     });
 };
 
-export const checkUserAuth = () => (dispatch) => {
-  if (getToken("accessToken")) {
-    dispatch(getUser())
-      .catch((err) => {
-        if (err.message === "jwt expired") {
-          dispatch(refreshTokenTest(getToken("refreshToken")));
-        } else {
-          removeToken("accessToken");
-          removeToken("refreshToken");
-          dispatch(setUserSuccess({}));
-        }
-      })
-      .finally(() => {
-        dispatch(setAuthChecked(true));
-      });
-  } else {
-    dispatch(setAuthChecked(true));
-  }
+export const resetPassword = (password, token, redirect) => (dispatch) => {
+  dispatch(submitRequest("resetPasswordForm"));
+  resetPasswordRequest(password, token)
+    .then(() => {
+      localStorage.removeItem("forgotPassword");
+      dispatch(submitSuccess("resetPasswordForm"));
+      redirect();
+    })
+    .catch((err) => {
+      console.error(err.message);
+      dispatch(submitFailed("resetPasswordForm"));
+    });
 };
 
 // TEST API

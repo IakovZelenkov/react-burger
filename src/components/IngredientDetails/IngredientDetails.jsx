@@ -36,7 +36,6 @@ const IngredientDetails = () => {
           </li>
           <li className={`${styles.item}`}>
             <p className="text text_type_main-default text_color_inactive">
-              {" "}
               Жиры, г
             </p>
             <p className="text text_type_main-medium text_color_inactive">

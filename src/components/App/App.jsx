@@ -15,6 +15,8 @@ import ResetPasswordPage from "../../pages/reset-password/reset-password";
 import ProfilePage from "../../pages/profile/profile";
 import IngredientsPage from "../../pages/ingredients/ingredients";
 import NotFound from "../../pages/not-found/not-found";
+import ProfileHome from "../../pages/profile/profile-home/profile-home";
+import ProfileOrders from "../../pages/profile/profile-orders/profile-orders";
 
 function App() {
   const dispatch = useDispatch();
@@ -30,16 +32,14 @@ function App() {
         <AppHeader />
         <Routes>
           <Route path="/" element={<HomePage />} />
-          {/* <Route
+          <Route
             path="/login"
             element={<OnlyUnAuth component={<LoginPage />} />}
-          /> */}
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          {/* <Route
+          />
+          <Route
             path="/register"
             element={<OnlyUnAuth component={<RegisterPage />} />}
-          /> */}
+          />
           <Route
             path="/forgot-password"
             element={<OnlyUnAuth component={<ForgotPasswordPage />} />}
@@ -51,7 +51,16 @@ function App() {
           <Route
             path="/profile"
             element={<OnlyAuth component={<ProfilePage />} />}
-          />
+          >
+            <Route
+              path="/profile"
+              element={<OnlyAuth component={<ProfileHome />} />}
+            />
+            <Route
+              path="/profile/orders"
+              element={<OnlyAuth component={<ProfileOrders />} />}
+            />
+          </Route>
           <Route path="/ingredients/:id" element={<IngredientsPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
