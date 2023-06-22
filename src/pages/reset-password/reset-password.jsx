@@ -13,11 +13,9 @@ import Loader from "../../components/Loader/Loader";
 import { resetPassword } from "../../services/actions/authActions";
 
 const ResetPasswordPage = () => {
-  const { password, token, request } = useSelector((state) => ({
-    password: state.auth.resetPasswordForm.password,
-    token: state.auth.resetPasswordForm.token,
-    request: state.auth.resetPasswordForm.request,
-  }));
+  const { password, token, request } = useSelector(
+    (state) => state.auth.resetPasswordForm
+  );
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -42,7 +40,9 @@ const ResetPasswordPage = () => {
 
   return (
     <div className={styles.container}>
-      <h2 className="text text_type_main-medium mb-6">Восстановление пароля</h2>
+      <h2 className="text text_type_main-medium mb-6">
+        Восстановление пароля
+      </h2>
       <form name="resetPassword" className={styles.form} onSubmit={onSubmit}>
         {request ? (
           <Loader />

@@ -12,10 +12,9 @@ import Loader from "../../components/Loader/Loader";
 import { forgotPassword } from "../../services/actions/authActions";
 
 const ForgotPasswordPage = () => {
-  const { email, request } = useSelector((state) => ({
-    email: state.auth.forgotPasswordForm.email,
-    request: state.auth.forgotPasswordForm.request,
-  }));
+  const { email, request } = useSelector(
+    (state) => state.auth.forgotPasswordForm
+  );
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -38,7 +37,9 @@ const ForgotPasswordPage = () => {
 
   return (
     <div className={styles.container}>
-      <h2 className="text text_type_main-medium mb-6">Восстановление пароля</h2>
+      <h2 className="text text_type_main-medium mb-6">
+        Восстановление пароля
+      </h2>
       <form name="forgotPassword" className={styles.form} onSubmit={onSubmit}>
         {request ? (
           <Loader />

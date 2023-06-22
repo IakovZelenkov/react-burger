@@ -13,11 +13,9 @@ import { loginUser } from "../../services/actions/authActions";
 import Loader from "../../components/Loader/Loader";
 
 const LoginPage = () => {
-  const { email, password, request } = useSelector((state) => ({
-    email: state.auth.loginForm.email,
-    password: state.auth.loginForm.password,
-    request: state.auth.loginForm.request,
-  }));
+  const { email, password, request } = useSelector(
+    (state) => state.auth.loginForm
+  );
 
   const dispatch = useDispatch();
 

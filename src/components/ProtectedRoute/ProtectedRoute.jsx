@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import { Navigate, useLocation } from "react-router-dom";
+import PropTypes from "prop-types";
 import Loader from "../Loader/Loader";
 import styles from "./ProtectedRoute.module.scss";
 
@@ -30,5 +31,10 @@ const Protected = ({ onlyUnAuth = false, component }) => {
 
 export const OnlyAuth = Protected;
 export const OnlyUnAuth = ({ component }) => (
-  <Protected onlyUnAuth={true} component={component} />
+  <Protected onlyUnAuth component={component} />
 );
+
+Protected.propTypes = {
+  onlyUnAuth: PropTypes.bool,
+  component: PropTypes.node.isRequired,
+};

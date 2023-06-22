@@ -14,12 +14,9 @@ import { registerUser } from "../../services/actions/authActions";
 import Loader from "../../components/Loader/Loader";
 
 const RegisterPage = () => {
-  const { name, email, password, request } = useSelector((state) => ({
-    name: state.auth.registerForm.name,
-    email: state.auth.registerForm.email,
-    password: state.auth.registerForm.password,
-    request: state.auth.registerForm.request,
-  }));
+  const { name, email, password, request } = useSelector(
+    (state) => state.auth.registerForm
+  );
 
   const dispatch = useDispatch();
 
