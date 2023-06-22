@@ -1,27 +1,15 @@
 import React from "react";
 import styles from "./BurgerIngredients.module.scss";
-
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
-
-import IngredientDetails from "../IngredientDetails/IngredientDetails";
 import IngredientsSection from "../IngredientsSection/IngredientsSection";
-import Modal from "../Modal/Modal";
-
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useInView } from "react-intersection-observer";
-
-import { closeIngredientDetailsModal } from "../../services/slices/modalSlice";
-import { resetSelectedIngredient } from "../../services/slices/ingredientDetailsSlice";
 
 const BurgerIngredients = () => {
   const [inViewBun, bunInView] = useInView({ threshold: 0.5 });
   const [inViewMain, mainInView] = useInView({ threshold: 0.5 });
   const [inViewSauce, sauceInView] = useInView({ threshold: 0.5 });
   const [active, setActive] = React.useState("");
-  const dispatch = useDispatch();
-  const ingredientDetailsModalOpen = useSelector(
-    (state) => state.modal.ingredientDetailsModalOpen
-  );
 
   const bunRef = {
     titleRef: React.useRef(),
@@ -113,16 +101,6 @@ const BurgerIngredients = () => {
             ref={sauceRef}
           />
         </div>
-      )}
-      {ingredientDetailsModalOpen && (
-        <Modal
-          onClose={() => {
-            dispatch(closeIngredientDetailsModal());
-            dispatch(resetSelectedIngredient());
-          }}
-        >
-          <IngredientDetails />
-        </Modal>
       )}
     </div>
   );

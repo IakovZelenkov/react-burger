@@ -73,6 +73,9 @@ const ProfileHome = () => {
           onIconClick={() => {
             onIconClick();
           }}
+          onBlur={() => {
+            setDisabled(true);
+          }}
         />
         <EmailInput
           value={formValues.email}
