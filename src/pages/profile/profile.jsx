@@ -41,7 +41,7 @@ const ProfilePage = () => {
               onClick={() => {
                 dispatch(logoutUser());
               }}
-              to="/"
+              to="/login"
               className={`${styles.link} text_type_main-medium text_color_inactive text `}
             >
               Выход
