@@ -1,31 +1,96 @@
 import React from "react";
 import styles from "./App.module.scss";
-
-import AppHeader from "../AppHeader/AppHeader";
-
-import BurgerIngredients from "../BurgerIngredients/BurgerIngredients";
-import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
-import { useDispatch } from "react-redux";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import { getIngredient } from "../../services/slices/burgerIngredientsSlice";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+import { checkUserAuth } from "../../services/actions/authActions";
+
+import { OnlyAuth, OnlyUnAuth } from "../ProtectedRoute/ProtectedRoute";
+import AppHeader from "../AppHeader/AppHeader";
+import HomePage from "../../pages/home/home";
+import LoginPage from "../../pages/login/login";
+import RegisterPage from "../../pages/register/register";
+import ForgotPasswordPage from "../../pages/forgot-password/forgot-password";
+import ResetPasswordPage from "../../pages/reset-password/reset-password";
+import ProfilePage from "../../pages/profile/profile";
+import IngredientsPage from "../../pages/ingredients/ingredients";
+import NotFound from "../../pages/not-found/not-found";
+import ProfileHome from "../../pages/profile/profile-home/profile-home";
+import ProfileOrders from "../../pages/profile/profile-orders/profile-orders";
+import Modal from "../Modal/Modal";
+import IngredientDetails from "../IngredientDetails/IngredientDetails";
 
 function App() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+  let state = location.state;
 
   React.useEffect(() => {
     dispatch(getIngredient());
+    dispatch(checkUserAuth());
   }, [dispatch]);
+
+  const ingredientDetailsModalOpen = useSelector(
+    (state) => state.modal.ingredientDetailsModalOpen
+  );
 
   return (
     <div className={styles.app}>
       <AppHeader />
-      <DndProvider backend={HTML5Backend}>
-        <div className={styles.container}>
-          <BurgerIngredients />
-          <BurgerConstructor />
-        </div>
-      </DndProvider>
+      <Routes location={state?.backgroundLocation || location}>
+        <Route path="/" element={<HomePage />} />
+        <Route
+          path="/login"
+          element={<OnlyUnAuth component={<LoginPage />} />}
+        />
+        <Route
+          path="/register"
+          element={<OnlyUnAuth component={<RegisterPage />} />}
+        />
+        <Route
+          path="/forgot-password"
+          element={<OnlyUnAuth component={<ForgotPasswordPage />} />}
+        />
+        <Route
+          path="/reset-password"
+          element={<OnlyUnAuth component={<ResetPasswordPage />} />}
+        />
+        <Route
+          path="/profile"
+          element={<OnlyAuth component={<ProfilePage />} />}
+        >
+          <Route
+            path="/profile"
+            element={<OnlyAuth component={<ProfileHome />} />}
+          />
+          <Route
+            path="/profile/orders"
+            element={<OnlyAuth component={<ProfileOrders />} />}
+          />
+        </Route>
+        <Route
+          path="/ingredients/:ingredientId"
+          element={<IngredientsPage />}
+        />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+      {state?.backgroundLocation && (
+        <Routes>
+          <Route
+            path="/ingredients/:ingredientId"
+            element={
+              <Modal
+                onClose={() => {
+                  navigate(-1);
+                }}
+              >
+                <IngredientDetails />
+              </Modal>
+            }
+          />
+        </Routes>
+      )}
     </div>
   );
 }

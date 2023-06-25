@@ -6,6 +6,7 @@ import ingredientDetailsReducer from "./slices/ingredientDetailsSlice";
 import burgerConstructorReducer from "./slices/burgerConstructorSlice";
 import orderDetailsReducer from "./slices/orderDetailsSlice";
 import modalReducer from "./slices/modalSlice";
+import authRedcuer from "./slices/authSlice";
 
 const composeEnhancers =
   typeof window === "object" && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
@@ -21,6 +22,7 @@ export const store = configureStore(
       burgerConstructor: burgerConstructorReducer,
       orderDetails: orderDetailsReducer,
       modal: modalReducer,
+      auth: authRedcuer,
     },
   },
   enhancer

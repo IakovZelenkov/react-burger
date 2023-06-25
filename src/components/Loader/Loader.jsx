@@ -1,11 +1,7 @@
 import styles from "./Loader.module.scss";
 
 const Loader = () => {
-  return (
-    <div className={styles.container}>
-      <div className={styles.loading}></div>
-    </div>
-  );
+  return <span className={styles.loader}></span>;
 };
 
 export default Loader;

@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createOrder } from "../../utils/burger-api";
+import { createOrder } from "../../utils/api";
 
 const initialState = {
   orderNumber: undefined,

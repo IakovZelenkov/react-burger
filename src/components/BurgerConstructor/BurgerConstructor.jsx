@@ -31,6 +31,7 @@ import {
   openOrderDetailsModal,
   closeOrderDetailsModalOpen,
 } from "../../services/slices/modalSlice.js";
+import { useNavigate } from "react-router-dom";
 
 const BurgerConstructor = () => {
   const orderDetailsModalOpen = useSelector(
@@ -39,6 +40,8 @@ const BurgerConstructor = () => {
 
   const dispatch = useDispatch();
   const ingredientsListRef = React.useRef();
+  const { user } = useSelector((state) => state.auth.user);
+  const navigate = useNavigate();
 
   const { bun, ingredients, orderNumber } = useSelector((state) => ({
     bun: state.burgerConstructor.bun,
@@ -75,6 +78,15 @@ const BurgerConstructor = () => {
       handleDrop(ingredient);
     },
   });
+
+  const createOrder = () => {
+    if (user === null) {
+      navigate("/login");
+    } else {
+      dispatch(submitOrder(bun, ingredients));
+      dispatch(openOrderDetailsModal());
+    }
+  };
 
   return (
     <>
@@ -130,8 +142,7 @@ const BurgerConstructor = () => {
             type="primary"
             size="medium"
             onClick={() => {
-              dispatch(submitOrder(bun, ingredients));
-              dispatch(openOrderDetailsModal());
+              createOrder();
             }}
             disabled={!bun || ingredients.length === 0}
           >
@@ -149,6 +160,7 @@ const BurgerConstructor = () => {
           }}
         >
           {orderNumber === undefined ? <Loader /> : <OrderDetails />}
+          {/* <Loader /> */}
         </Modal>
       )}
     </>

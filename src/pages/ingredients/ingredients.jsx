@@ -1,26 +1,21 @@
 import React from "react";
-import styles from "./IngredientDetails.module.scss";
+import styles from "./ingredients.module.scss";
+
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
-const IngredientDetails = () => {
+const IngredientsPage = () => {
   const { ingredientId } = useParams();
   const ingredients = useSelector(
     (state) => state.burgerIngredients.ingredients
   );
   const ingredient = ingredients.find((item) => item._id === ingredientId);
 
-  // const ingredient = useSelector(
-  //   (state) => state.ingredientDetails.selectedIngredient
-  // );
-
   return (
     <>
       {ingredient && (
         <div className={styles.container}>
-          <h2
-            className={`${styles.title} text text_type_main-large pl-10 pt-10`}
-          >
+          <h2 className={`${styles.title} text text_type_main-large`}>
             Детали ингредиента
           </h2>
           <div className={styles.wrapper}>
@@ -29,9 +24,7 @@ const IngredientDetails = () => {
               alt="Ингредиент"
               className="mb-4"
             />
-            <p className="text text_type_main-medium mb-8">
-              {ingredient.name}
-            </p>
+            <p className={"text text_type_main-medium"}>{ingredient.name}</p>
             <ul className={`${styles.details}`}>
               <li className={`${styles.item}`}>
                 <p className="text text_type_main-default text_color_inactive">
@@ -73,4 +66,4 @@ const IngredientDetails = () => {
   );
 };
 
-export default IngredientDetails;
+export default IngredientsPage;
