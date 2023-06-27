@@ -1,8 +1,8 @@
 import React from "react";
 import styles from "./App.module.scss";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { getIngredient } from "../../services/slices/burgerIngredientsSlice";
+import { useDispatch } from "react-redux";
+import { getIngredients } from "../../services/slices/burgerIngredientsSlice";
 import { checkUserAuth } from "../../services/actions/authActions";
 
 import { OnlyAuth, OnlyUnAuth } from "../ProtectedRoute/ProtectedRoute";
@@ -27,13 +27,9 @@ function App() {
   let state = location.state;
 
   React.useEffect(() => {
-    dispatch(getIngredient());
+    dispatch(getIngredients());
     dispatch(checkUserAuth());
   }, [dispatch]);
-
-  const ingredientDetailsModalOpen = useSelector(
-    (state) => state.modal.ingredientDetailsModalOpen
-  );
 
   return (
     <div className={styles.app}>

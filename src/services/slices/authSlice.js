@@ -1,35 +1,36 @@
 import { createSlice } from "@reduxjs/toolkit";
+import {
+  getUser,
+  registerUser,
+  loginUser,
+  logoutUser,
+  forgotPassword,
+  resetPassword,
+  updateUser,
+} from "../actions/authActions";
 
 const initialState = {
   user: {
     user: null,
-    request: false,
-    failed: false,
+    loading: "idle", // 'pending' | 'succeeded' | 'failed'
+    error: null,
+    isAuthChecked: false,
   },
-  isAuthChecked: false,
-  loginForm: {
-    email: "",
-    password: "",
-    request: false,
-    failed: false,
+  login: {
+    loading: "idle",
+    error: null,
   },
-  registerForm: {
-    name: "",
-    email: "",
-    password: "",
-    request: false,
-    failed: false,
+  register: {
+    loading: "idle",
+    error: null,
   },
-  forgotPasswordForm: {
-    email: "",
-    request: false,
-    failed: false,
+  forgotPassword: {
+    loading: "idle",
+    error: null,
   },
-  resetPasswordForm: {
-    password: "",
-    token: "",
-    request: false,
-    failed: false,
+  resetPassword: {
+    loading: "idle",
+    error: null,
   },
 };
 
@@ -38,65 +39,114 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     setAuthChecked: (state, action) => {
-      state.isAuthChecked = action.payload;
+      state.user.isAuthChecked = action.payload;
     },
-    setUserRequest: (state) => {
-      state.user.request = true;
+    clearErrors: (state) => {
+      state.user.error = null;
+      state.login.error = null;
+      state.register.error = null;
+      state.forgotPassword.error = null;
+      state.resetPassword.error = null;
     },
-    setUserSuccess: (state, action) => {
-      state.user.request = false;
-      state.user.failed = false;
-      state.user.user = action.payload;
-    },
-    setUserFailed: (state) => {
-      state.user.request = false;
-      state.user.failed = true;
-      state.user.user = null;
-    },
-    setFormValue: (state, action) => {
-      const { value, fieldName, formName } = action.payload;
-      state[formName][fieldName] = value;
-    },
-
-    submitRequest: (state, action) => {
-      state[action.payload].request = true;
-    },
-    submitSuccess: (state, action) => {
-      state[action.payload].request = false;
-      state[action.payload].failed = false;
-      state[action.payload] = initialState[action.payload];
-    },
-    submitFailed: (state, action) => {
-      state[action.payload].request = false;
-      state[action.payload].failed = true;
-    },
-    logoutRequest: (state) => {
-      state.user.request = true;
-    },
-    logoutSuccess: (state) => {
-      state.user.request = false;
-      state.user.failed = false;
-      state.user.user = null;
-    },
-    logoutFailed: (state) => {
-      state.user.request = false;
-      state.user.failed = true;
-    },
+  },
+  extraReducers: (builder) => {
+    builder
+      // User
+      .addCase(getUser.pending, (state) => {
+        state.user.loading = "pending";
+        state.user.error = null;
+      })
+      .addCase(getUser.fulfilled, (state, action) => {
+        state.user.loading = "succeeded";
+        state.user.user = action.payload;
+        state.user.isAuthChecked = true;
+      })
+      .addCase(getUser.rejected, (state, action) => {
+        state.user.loading = "failed";
+        state.user.error = action.payload;
+        state.user.user = null;
+      })
+      // Register
+      .addCase(registerUser.pending, (state) => {
+        state.register.loading = "pending";
+        state.register.error = null;
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.register.loading = "succeeded";
+        state.user.user = action.payload;
+        state.user.isAuthChecked = true;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.register.loading = "failed";
+        state.register.error = action.payload;
+      })
+      // Login
+      .addCase(loginUser.pending, (state) => {
+        state.login.loading = "pending";
+        state.login.error = null;
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.login.loading = "succeeded";
+        state.user.user = action.payload;
+        state.user.isAuthChecked = true;
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.login.loading = "failed";
+        state.login.error = action.payload;
+      })
+      // Logout
+      .addCase(logoutUser.pending, (state) => {
+        state.user.loading = "pending";
+        state.user.error = null;
+      })
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.user.loading = "succeeded";
+        state.user.user = null;
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
+        state.user.loading = "failed";
+        state.user.error = action.payload;
+      })
+      // UpdateUser
+      .addCase(updateUser.pending, (state) => {
+        state.user.loading = "pending";
+        state.user.error = null;
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.user.loading = "succeeded";
+        state.user.user = action.payload;
+      })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.user.loading = "failed";
+        state.user.error = action.payload;
+      })
+      // ForgotPassword
+      .addCase(forgotPassword.pending, (state) => {
+        state.forgotPassword.loading = "pending";
+        state.forgotPassword.error = null;
+      })
+      .addCase(forgotPassword.fulfilled, (state) => {
+        state.forgotPassword.loading = "succeeded";
+      })
+      .addCase(forgotPassword.rejected, (state, action) => {
+        state.forgotPassword.loading = "failed";
+        state.forgotPassword.error = action.payload;
+      })
+      // ResetPassword
+      .addCase(resetPassword.pending, (state) => {
+        state.resetPassword.loading = "pending";
+        state.resetPassword.error = null;
+      })
+      .addCase(resetPassword.fulfilled, (state) => {
+        state.resetPassword.loading = "succeeded";
+      })
+      .addCase(resetPassword.rejected, (state, action) => {
+        state.resetPassword.loading = "failed";
+        state.resetPassword.error = action.payload;
+      });
   },
 });
 
-export const {
-  setAuthChecked,
-  setUserRequest,
-  setUserSuccess,
-  setUserFailed,
-  setFormValue,
-  submitRequest,
-  submitSuccess,
-  submitFailed,
-  logoutRequest,
-  logoutSuccess,
-  logoutFailed,
-} = authSlice.actions;
+export const { setAuthChecked, clearErrors } = authSlice.actions;
 
 export default authSlice.reducer;

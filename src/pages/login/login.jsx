@@ -8,47 +8,54 @@ import {
 
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setFormValue } from "../../services/slices/authSlice";
 import { loginUser } from "../../services/actions/authActions";
 import Loader from "../../components/Loader/Loader";
 
 const LoginPage = () => {
-  const { email, password, request } = useSelector(
-    (state) => state.auth.loginForm
-  );
-
   const dispatch = useDispatch();
+  const [form, setValue] = React.useState({ email: "", password: "" });
+  const { loading, error } = useSelector((state) => state.auth.login);
 
   const onChange = (evt) => {
     const { value, name } = evt.target;
-    dispatch(setFormValue({ value, fieldName: name, formName: "loginForm" }));
+    setValue({ ...form, [name]: value });
   };
 
   const onSubmit = (evt) => {
     evt.preventDefault();
-    dispatch(loginUser(email, password));
+    dispatch(loginUser({ email: form.email, password: form.password }));
   };
 
   return (
     <div className={styles.container}>
       <h2 className="text text_type_main-medium mb-6">Вход</h2>
       <form name="login" className={styles.form} onSubmit={onSubmit}>
-        {request ? (
+        {loading === "pending" ? (
           <Loader />
         ) : (
           <>
             <EmailInput
-              value={email}
+              value={form.email}
               onChange={onChange}
               name={"email"}
               placeholder="E-mail"
             />
             <PasswordInput
-              value={password}
+              value={form.password}
               onChange={onChange}
               name={"password"}
             />
-            <Button htmlType="submit" type="primary" size="medium">
+            {error ? (
+              <p className="input__error text_type_main-default">{error}</p>
+            ) : (
+              ""
+            )}
+            <Button
+              htmlType="submit"
+              type="primary"
+              size="medium"
+              disabled={!form.email || !form.password}
+            >
               Войти
             </Button>
           </>

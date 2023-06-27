@@ -1,3 +1,7 @@
+import Cookies from "js-cookie";
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { setToken } from "../../utils/cookie";
+import { setAuthChecked } from "../slices/authSlice";
 import {
   getUserRequest,
   registerUserRequest,
@@ -7,88 +11,61 @@ import {
   forgotPasswordRequest,
   resetPasswordRequest,
 } from "../../utils/api";
-import { setToken } from "../../utils/cookie";
-import {
-  setAuthChecked,
-  setUserRequest,
-  setUserSuccess,
-  setUserFailed,
-  submitRequest,
-  submitSuccess,
-  submitFailed,
-  logoutRequest,
-  logoutSuccess,
-  logoutFailed,
-} from "../slices/authSlice";
-import Cookies from "js-cookie";
 
-export const getUser = () => (dispatch) => {
-  dispatch(setUserRequest());
-  getUserRequest()
-    .then((res) => {
-      dispatch(setUserSuccess(res.user));
-      dispatch(setAuthChecked(true));
-    })
-    .catch((err) => {
-      console.error(err.message);
+export const getUser = createAsyncThunk(
+  "auth/getUser",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await getUserRequest();
+      return res.user;
+    } catch (error) {
       Cookies.remove("accessToken");
       Cookies.remove("refreshToken");
-      dispatch(setUserFailed());
-    });
-};
+      return rejectWithValue(error.response.data.message);
+    }
+  }
+);
 
-export const registerUser = (name, email, password) => (dispatch) => {
-  dispatch(submitRequest("registerForm"));
-  registerUserRequest(name, email, password)
-    .then((res) => {
+export const registerUser = createAsyncThunk(
+  "auth/register",
+  async ({ name, email, password }, { rejectWithValue }) => {
+    try {
+      const res = await registerUserRequest(name, email, password);
       setToken("accessToken", res.accessToken);
       setToken("refreshToken", res.refreshToken);
-      return res;
-    })
-    .then((res) => {
-      dispatch(submitSuccess("registerForm"));
-      dispatch(setUserSuccess(res.user));
+      return res.user;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message);
+    }
+  }
+);
 
-      dispatch(setAuthChecked(true));
-    })
-    .catch((err) => {
-      console.error(err.message);
-      dispatch(submitFailed("registerForm"));
-    });
-};
-
-export const loginUser = (email, password) => (dispatch) => {
-  dispatch(submitRequest("loginForm"));
-  loginUserRequest(email, password)
-    .then((res) => {
+export const loginUser = createAsyncThunk(
+  "auth/login",
+  async ({ email, password }, { rejectWithValue }) => {
+    try {
+      const res = await loginUserRequest(email, password);
       setToken("accessToken", res.accessToken);
       setToken("refreshToken", res.refreshToken);
-      return res;
-    })
-    .then((res) => {
-      dispatch(submitSuccess("loginForm"));
-      dispatch(setUserSuccess(res.user));
-      dispatch(setAuthChecked(true));
-    })
-    .catch((err) => {
-      console.error(err.message);
-      dispatch(submitFailed("loginForm"));
-    });
-};
+      return res.user;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message);
+    }
+  }
+);
 
-export const logoutUser = () => (dispatch) => {
-  dispatch(logoutRequest());
-  logoutUserRequest()
-    .then(() => {
-      dispatch(logoutSuccess());
+export const logoutUser = createAsyncThunk(
+  "auth/logout",
+  async (_, { rejectWithValue }) => {
+    try {
+      await logoutUserRequest();
       Cookies.remove("accessToken");
       Cookies.remove("refreshToken");
-    })
-    .catch((err) => {
-      console.error(err.message);
-      dispatch(logoutFailed());
-    });
-};
+    } catch (error) {
+      return rejectWithValue(error.response.data.message);
+    }
+  }
+);
 
 export const checkUserAuth = () => (dispatch) => {
   if (Cookies.get("accessToken")) {
@@ -98,95 +75,42 @@ export const checkUserAuth = () => (dispatch) => {
   }
 };
 
-export const updateUser = (name, email, password) => (dispatch) => {
-  dispatch(setUserRequest());
-  updateUserRequest(name, email, password)
-    .then((res) => {
-      dispatch(setUserSuccess(res.user));
-    })
-    .catch((err) => {
-      console.error(err.message);
-      dispatch(setUserFailed());
-    });
-};
+export const updateUser = createAsyncThunk(
+  "auth/updateUser",
+  async ({ name, email, password }, { rejectWithValue }) => {
+    try {
+      const res = await updateUserRequest(name, email, password);
+      return res.user;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message);
+    }
+  }
+);
 
-export const forgotPassword = (email, redirect) => (dispatch) => {
-  dispatch(submitRequest("forgotPasswordForm"));
-  forgotPasswordRequest(email)
-    .then(() => {
-      localStorage.setItem("forgotPassword", "success");
-      dispatch(submitSuccess("forgotPasswordForm"));
-      redirect();
-    })
-    .catch((err) => {
-      console.error(err.message);
-      dispatch(submitFailed("forgotPasswordForm"));
-    });
-};
-
-export const resetPassword = (password, token, redirect) => (dispatch) => {
-  dispatch(submitRequest("resetPasswordForm"));
-  resetPasswordRequest(password, token)
-    .then(() => {
-      localStorage.removeItem("forgotPassword");
-      dispatch(submitSuccess("resetPasswordForm"));
-      redirect();
-    })
-    .catch((err) => {
-      console.error(err.message);
-      dispatch(submitFailed("resetPasswordForm"));
-    });
-};
-
-// TEST API
-const registerRequestTest = (name, email, password) =>
-  new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve({
-        success: true,
-        accessToken: "Bearer test-token",
-        refreshToken: "test-refresh-token",
-        user: {
-          name: name,
-          email: email,
-        },
+export const forgotPassword = createAsyncThunk(
+  "auth/forgotPassword",
+  async ({ email, redirect }, { rejectWithValue }) => {
+    try {
+      await forgotPasswordRequest(email);
+      Cookies.set("forgotPassword", "success", {
+        expires: 1 / 48,
       });
-    }, 1000);
-  });
+      return redirect();
+    } catch (error) {
+      return rejectWithValue(error.response.data.message);
+    }
+  }
+);
 
-const getUserTest = () =>
-  new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve({
-        success: true,
-        user: {
-          email: "test@email.com",
-          name: "testName",
-        },
-      });
-    }, 1000);
-  });
-
-const loginUserTest = () =>
-  new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve({
-        success: true,
-
-        accessToken: "test-token",
-        refreshToken: "test-refresh-token",
-        user: { email: "test@email.com", name: "testName" },
-      });
-    }, 1000);
-  });
-
-const refreshTokenTest = () =>
-  new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve({
-        success: true,
-        accessToken: "Bearer ...",
-        refreshToken: "",
-      });
-    }, 1000);
-  });
+export const resetPassword = createAsyncThunk(
+  "auth/resetPassword",
+  async ({ password, token, redirect }, { rejectWithValue }) => {
+    try {
+      await resetPasswordRequest(password, token);
+      Cookies.remove("forgotPassword");
+      return redirect();
+    } catch (error) {
+      return rejectWithValue(error.response.data.message);
+    }
+  }
+);

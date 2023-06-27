@@ -5,8 +5,7 @@ import Loader from "../Loader/Loader";
 import styles from "./ProtectedRoute.module.scss";
 
 const Protected = ({ onlyUnAuth = false, component }) => {
-  const isAuthChecked = useSelector((store) => store.auth.isAuthChecked);
-  const user = useSelector((store) => store.auth.user.user);
+  const { user, isAuthChecked } = useSelector((store) => store.auth.user);
   const location = useLocation();
 
   if (!isAuthChecked) {
