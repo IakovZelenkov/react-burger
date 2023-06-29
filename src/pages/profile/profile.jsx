@@ -3,7 +3,7 @@ import styles from "./profile.module.scss";
 
 import { useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { logoutUser } from "../../services/actions/authActions";
+import { logoutUser } from "../../services/slices/auth/actions";
 
 import { Outlet } from "react-router-dom";
 
@@ -15,11 +15,11 @@ const ProfilePage = () => {
         <ul className={styles.navItems}>
           <li className={styles.navItem}>
             <NavLink
-              to="/profile"
+              to=""
               end
-              className={(isActive) =>
+              className={({ isActive }) =>
                 `${styles.link} text_type_main-medium text_color_inactive text ` +
-                (isActive.isActive ? `${styles.active}` : "")
+                (isActive ? ` ${styles.active}` : "")
               }
             >
               Профиль
@@ -27,10 +27,11 @@ const ProfilePage = () => {
           </li>
           <li className={styles.navItem}>
             <NavLink
-              to="/profile/orders"
-              className={(isActive) =>
+              to="orders"
+              end
+              className={({ isActive }) =>
                 `${styles.link} text_type_main-medium text_color_inactive text ` +
-                (isActive.isActive ? `${styles.active}` : "")
+                (isActive ? ` ${styles.active}` : "")
               }
             >
               История заказов

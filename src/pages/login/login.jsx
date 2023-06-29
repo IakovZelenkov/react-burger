@@ -8,7 +8,7 @@ import {
 
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../../services/actions/authActions";
+import { loginUser } from "../../services/slices/auth/actions";
 import Loader from "../../components/Loader/Loader";
 
 const LoginPage = () => {

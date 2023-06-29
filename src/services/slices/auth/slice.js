@@ -7,7 +7,7 @@ import {
   forgotPassword,
   resetPassword,
   updateUser,
-} from "../actions/authActions";
+} from "./actions";
 
 const initialState = {
   user: {

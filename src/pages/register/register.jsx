@@ -9,7 +9,7 @@ import {
 
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { registerUser } from "../../services/actions/authActions";
+import { registerUser } from "../../services/slices/auth/actions";
 import Loader from "../../components/Loader/Loader";
 
 const RegisterPage = () => {

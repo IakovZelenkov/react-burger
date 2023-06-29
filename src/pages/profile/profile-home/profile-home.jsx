@@ -7,7 +7,7 @@ import {
   Input,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useSelector, useDispatch } from "react-redux";
-import { updateUser } from "../../../services/actions/authActions";
+import { updateUser } from "../../../services/slices/auth/actions";
 
 const ProfileHome = () => {
   const { user } = useSelector((state) => state.auth.user);

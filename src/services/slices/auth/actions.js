@@ -1,7 +1,7 @@
 import Cookies from "js-cookie";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { setToken } from "../../utils/cookie";
-import { setAuthChecked } from "../slices/authSlice";
+import { setToken } from "../../../utils/cookie";
+import { setAuthChecked } from "./slice";
 import {
   getUserRequest,
   registerUserRequest,
@@ -10,7 +10,7 @@ import {
   logoutUserRequest,
   forgotPasswordRequest,
   resetPasswordRequest,
-} from "../../utils/api";
+} from "../../../utils/api";
 
 export const getUser = createAsyncThunk(
   "auth/getUser",

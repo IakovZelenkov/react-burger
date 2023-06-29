@@ -9,7 +9,7 @@ import {
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../components/Loader/Loader";
-import { forgotPassword } from "../../services/actions/authActions";
+import { forgotPassword } from "../../services/slices/auth/actions";
 
 const ForgotPasswordPage = () => {
   const dispatch = useDispatch();

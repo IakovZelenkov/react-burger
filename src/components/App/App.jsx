@@ -3,7 +3,7 @@ import styles from "./App.module.scss";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { getIngredients } from "../../services/slices/burgerIngredientsSlice";
-import { checkUserAuth } from "../../services/actions/authActions";
+import { checkUserAuth } from "../../services/slices/auth/actions";
 
 import { OnlyAuth, OnlyUnAuth } from "../ProtectedRoute/ProtectedRoute";
 import AppHeader from "../AppHeader/AppHeader";
@@ -19,6 +19,7 @@ import ProfileHome from "../../pages/profile/profile-home/profile-home";
 import ProfileOrders from "../../pages/profile/profile-orders/profile-orders";
 import Modal from "../Modal/Modal";
 import IngredientDetails from "../IngredientDetails/IngredientDetails";
+import FeedPage from "../../pages/feed/feed";
 
 function App() {
   const dispatch = useDispatch();
@@ -36,6 +37,7 @@ function App() {
       <AppHeader />
       <Routes location={state?.backgroundLocation || location}>
         <Route path="/" element={<HomePage />} />
+        <Route path="/feed" element={<FeedPage />} />
         <Route
           path="/login"
           element={<OnlyUnAuth component={<LoginPage />} />}
