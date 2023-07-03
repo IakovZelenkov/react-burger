@@ -1,24 +1,13 @@
-import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  connect,
-  disconnect,
-} from "../../../services/slices/orders-feed/actions";
-
-const URL = "wss://norma.nomoreparties.space/orders/all";
+import React from "react";
+import styles from "./profile-orders.module.scss";
+import Orders from "../../../components/Orders/Orders";
 
 const ProfileOrders = () => {
-  const { orders } = useSelector((state) => state.ordersFeed);
-  const dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   dispatch(connect(URL));
-  //   return () => {
-  //     dispatch(disconnect());
-  //   };
-  // }, [dispatch]);
-
-  return <div>ProfileOrders</div>;
+  return (
+    <div className={styles.container}>
+      <Orders />
+    </div>
+  );
 };
 
 export default ProfileOrders;

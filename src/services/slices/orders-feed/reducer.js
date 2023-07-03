@@ -1,5 +1,5 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { WebsocketStatus } from "../../../utils/feedConstants";
+import { WebsocketStatus } from "../../../utils/constants";
 import { wsClose, wsConnecting, wsError, wsMessage, wsOpen } from "./actions";
 
 const initialState = {

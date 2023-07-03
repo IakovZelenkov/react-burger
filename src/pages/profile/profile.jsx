@@ -1,14 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./profile.module.scss";
 
 import { useDispatch } from "react-redux";
-import { NavLink } from "react-router-dom";
-import { logoutUser } from "../../services/slices/auth/actions";
+import { NavLink, useMatch } from "react-router-dom";
+import { logoutUser, checkUserAuth } from "../../services/slices/auth/actions";
 
 import { Outlet } from "react-router-dom";
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
+  const match = useMatch({
+    path: "/profile/orders",
+    end: true,
+  });
+
   return (
     <div className={styles.container}>
       <nav className={styles.nav}>
@@ -52,7 +57,9 @@ const ProfilePage = () => {
         <p
           className={`${styles.description} text_type_main-default text_color_inactive text`}
         >
-          В этом разделе вы можете изменить свои персональные данные
+          {match
+            ? "В этом разделе вы можете просмотреть свою историю заказов"
+            : "В этом разделе вы можете изменить свои персональные данные"}
         </p>
       </nav>
       <Outlet />

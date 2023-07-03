@@ -6,7 +6,6 @@ import orderDetailsReducer from "./slices/orderDetailsSlice";
 import modalReducer from "./slices/modalSlice";
 import authRedcuer from "./slices/auth/slice";
 import { ordersFeedReducer } from "./slices/orders-feed/reducer";
-import { profileOrdersFeedReducer } from "./slices/profile-orders-feed/reducer";
 import { socketMiddleware } from "./middleware/socketMiddleware";
 import {
   connect as OrdersFeedWsConnect,
@@ -18,16 +17,6 @@ import {
   wsConnecting as OrdersFeedWsConnecting,
 } from "./slices/orders-feed/actions";
 
-import {
-  connect as ProfileOrdersFeedWsConnect,
-  disconnect as ProfileOrdersFeedWsDisonnect,
-  wsOpen as ProfileOrdersFeedWsOpen,
-  wsClose as ProfileOrdersFeedWsClose,
-  wsError as ProfileOrdersFeedWsError,
-  wsMessage as ProfileOrdersFeedWsMessage,
-  wsConnecting as ProfileOrdersFeedWsConnecting,
-} from "./slices/profile-orders-feed/actions";
-
 const ordersFeedMiddleware = socketMiddleware({
   wsConnect: OrdersFeedWsConnect,
   wsDisconnect: OrdersFeedWsDisonnect,
@@ -36,16 +25,6 @@ const ordersFeedMiddleware = socketMiddleware({
   onError: OrdersFeedWsError,
   onMessage: OrdersFeedWsMessage,
   wsConnecting: OrdersFeedWsConnecting,
-});
-
-const profileOrdersFeedMiddleware = socketMiddleware({
-  wsConnect: ProfileOrdersFeedWsConnect,
-  wsDisconnect: ProfileOrdersFeedWsDisonnect,
-  onOpen: ProfileOrdersFeedWsOpen,
-  onClose: ProfileOrdersFeedWsClose,
-  onError: ProfileOrdersFeedWsError,
-  onMessage: ProfileOrdersFeedWsMessage,
-  wsConnecting: ProfileOrdersFeedWsConnecting,
 });
 
 export const store = configureStore({
@@ -57,12 +36,8 @@ export const store = configureStore({
     modal: modalReducer,
     auth: authRedcuer,
     ordersFeed: ordersFeedReducer,
-    profileOrdersFeed: profileOrdersFeedReducer,
   },
   middleware: (getDefaultMiddleware) => {
-    return getDefaultMiddleware().concat(
-      ordersFeedMiddleware,
-      profileOrdersFeedMiddleware
-    );
+    return getDefaultMiddleware().concat(ordersFeedMiddleware);
   },
 });

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./profile-home.module.scss";
 import {
   EmailInput,
@@ -47,7 +47,7 @@ const ProfileHome = () => {
     setDisabled(true);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     setValue({ ...form, name: user.name, email: user.email });
   }, [user.name, user.email]);
 

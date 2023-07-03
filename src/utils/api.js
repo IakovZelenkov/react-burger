@@ -1,8 +1,9 @@
 import { setToken } from "./cookie";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { BASE_URL } from "./constants";
 
-axios.defaults.baseURL = "https://norma.nomoreparties.space/api";
+axios.defaults.baseURL = BASE_URL;
 
 const axiosInstance = axios.create();
 
