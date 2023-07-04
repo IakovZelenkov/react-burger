@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styles from "./profile.module.scss";
 
 import { useDispatch } from "react-redux";
 import { NavLink, useMatch } from "react-router-dom";
-import { logoutUser, checkUserAuth } from "../../services/slices/auth/actions";
+import { logoutUser } from "../../services/slices/auth/actions";
 
 import { Outlet } from "react-router-dom";
 

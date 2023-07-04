@@ -41,6 +41,9 @@ export const authSlice = createSlice({
     setAuthChecked: (state, action) => {
       state.user.isAuthChecked = action.payload;
     },
+    resetUser: (state) => {
+      state.user.user = null;
+    },
     clearErrors: (state) => {
       state.user.error = null;
       state.login.error = null;
@@ -147,6 +150,6 @@ export const authSlice = createSlice({
   },
 });
 
-export const { setAuthChecked, clearErrors } = authSlice.actions;
+export const { setAuthChecked, clearErrors, resetUser } = authSlice.actions;
 
 export default authSlice.reducer;

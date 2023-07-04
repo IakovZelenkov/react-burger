@@ -7,7 +7,10 @@ import {
   Input,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useSelector, useDispatch } from "react-redux";
-import { updateUser } from "../../../services/slices/auth/actions";
+import {
+  checkUserAuth,
+  updateUser,
+} from "../../../services/slices/auth/actions";
 
 const ProfileHome = () => {
   const { user } = useSelector((state) => state.auth.user);
@@ -50,6 +53,11 @@ const ProfileHome = () => {
   useEffect(() => {
     setValue({ ...form, name: user.name, email: user.email });
   }, [user.name, user.email]);
+
+  useEffect(() => {
+    dispatch(checkUserAuth());
+    console.log("called1");
+  }, [dispatch]);
 
   const checkForms = () => {
     return !form.name || !form.email || !form.password;

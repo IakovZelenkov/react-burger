@@ -1,7 +1,7 @@
 import Cookies from "js-cookie";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { setToken } from "../../../utils/cookie";
-import { setAuthChecked } from "./slice";
+import { setAuthChecked, resetUser } from "./slice";
 import {
   getUserRequest,
   registerUserRequest,
@@ -72,6 +72,7 @@ export const checkUserAuth = () => (dispatch) => {
     dispatch(getUser());
   } else {
     dispatch(setAuthChecked(true));
+    dispatch(resetUser());
   }
 };
 
