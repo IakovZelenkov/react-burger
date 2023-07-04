@@ -1,0 +1,52 @@
+.container {
+  display: flex;
+  max-width: 640px;
+  margin: 0 auto;
+  flex-direction: column;
+  padding: 40px;
+}
+
+.container_page {
+  margin-top: 140px;
+  padding: 0;
+}
+
+.number_modal {
+  text-align: left;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 60px;
+  list-style: none;
+}
+
+.order_done {
+  color: #0cc;
+}
+
+.ingredients {
+  list-style: none;
+}
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  list-style: none;
+  padding: 0 24px 0 0;
+  max-height: 322px;
+  overflow: hidden;
+  overflow-y: scroll;
+  margin: 24px 0 40px;
+}
+
+.info {
+  display: flex;
+  justify-content: space-between;
+}
+
+.price {
+  display: flex;
+}

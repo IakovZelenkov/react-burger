@@ -20,6 +20,7 @@ import ProfileOrders from "../../pages/profile/profile-orders/profile-orders";
 import Modal from "../Modal/Modal";
 import IngredientDetails from "../IngredientDetails/IngredientDetails";
 import FeedPage from "../../pages/feed/feed";
+import OrderInfo from "../OrderInfo/OrderInfo";
 
 function App() {
   const dispatch = useDispatch();
@@ -38,6 +39,7 @@ function App() {
       <Routes location={state?.backgroundLocation || location}>
         <Route path="/" element={<HomePage />} />
         <Route path="/feed" element={<FeedPage />} />
+        <Route path="/feed/:orderNumber" element={<OrderInfo />} />
         <Route
           path="/login"
           element={<OnlyUnAuth component={<LoginPage />} />}
@@ -68,6 +70,10 @@ function App() {
           />
         </Route>
         <Route
+          path="/profile/orders/:orderNumber"
+          element={<OnlyAuth component={<OrderInfo />} />}
+        />
+        <Route
           path="/ingredients/:ingredientId"
           element={<IngredientsPage />}
         />
@@ -84,6 +90,30 @@ function App() {
                 }}
               >
                 <IngredientDetails />
+              </Modal>
+            }
+          />
+          <Route
+            path="/feed/:orderNumber"
+            element={
+              <Modal
+                onClose={() => {
+                  navigate(-1);
+                }}
+              >
+                <OrderInfo />
+              </Modal>
+            }
+          />
+          <Route
+            path="/profile/orders/:orderNumber"
+            element={
+              <Modal
+                onClose={() => {
+                  navigate(-1);
+                }}
+              >
+                <OrderInfo />
               </Modal>
             }
           />

@@ -34,11 +34,11 @@ const OrderCard = ({ order, isProfile }) => {
   if (isProfile) {
     path = `/profile/orders/${order.number}`;
   } else {
-    path = `${order.number}`;
+    path = `/feed/${order.number}`;
   }
   const orderStatus = () => {
-    let text = "";
-    let className = "";
+    let text = "Создан";
+    let className = styles.created;
 
     switch (order.status) {
       case "created":
@@ -93,7 +93,7 @@ const OrderCard = ({ order, isProfile }) => {
 
 OrderCard.propTypes = {
   order: PropTypes.object.isRequired,
-  status: PropTypes.bool,
+  isProfile: PropTypes.bool,
 };
 
 export default OrderCard;

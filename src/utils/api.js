@@ -92,3 +92,7 @@ export const forgotPasswordRequest = (email) => {
 export const resetPasswordRequest = (password, token) => {
   return axiosInstance.post("/password-reset/reset", { password, token });
 };
+
+export const getOrderRequest = (orderNumber) => {
+  return axios.get(`orders/${orderNumber}`);
+};
