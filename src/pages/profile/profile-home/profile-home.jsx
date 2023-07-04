@@ -56,7 +56,6 @@ const ProfileHome = () => {
 
   useEffect(() => {
     dispatch(checkUserAuth());
-    console.log("called1");
   }, [dispatch]);
 
   const checkForms = () => {

@@ -8,7 +8,6 @@ const ProfileOrders = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(checkUserAuth());
-    console.log("called2");
   }, [dispatch]);
 
   return (
