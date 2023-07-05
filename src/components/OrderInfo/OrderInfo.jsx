@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import styles from "./OrderInfo.module.scss";
 import { useLocation, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,12 +9,15 @@ import {
   CurrencyIcon,
   FormattedDate,
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import clsx from "clsx";
 
 const OrderInfo = () => {
   const dispatch = useDispatch();
   const { orderNumber } = useParams();
   const { order, loading } = useSelector((state) => state.orderDetails);
-  const { ingredients } = useSelector((state) => state.burgerIngredients);
+  const ingredients = useSelector(
+    (state) => state.burgerIngredients.ingredients
+  );
   const location = useLocation();
 
   const orderIngredients = order.ingredients?.reduce((accumulator, id) => {
@@ -38,9 +41,13 @@ const OrderInfo = () => {
     return accumulator;
   }, []);
 
-  const totalPrice = orderIngredients?.reduce((sum, ingredient) => {
-    return sum + ingredient.price * ingredient.count;
-  }, 0);
+  const totalPrice = useMemo(() => {
+    if (!orderIngredients) return 0;
+
+    return orderIngredients.reduce((sum, ingredient) => {
+      return sum + ingredient.price * ingredient.count;
+    }, 0);
+  }, [orderIngredients]);
 
   useEffect(() => {
     dispatch(getOrder(orderNumber));
@@ -76,15 +83,14 @@ const OrderInfo = () => {
 
   return (
     <div
-      className={
-        styles.container + (location.state ? "" : ` ${styles.container_page}`)
-      }
+      className={clsx(styles.container, {
+        [styles.container_page]: !location.state,
+      })}
     >
       <p
-        className={
-          `text text_type_digits-default mb-5` +
-          (location.state ? ` ${styles.number_modal}` : "")
-        }
+        className={clsx("text text_type_digits-default mb-5", {
+          [styles.number_modal]: location.state,
+        })}
       >{`#${order.number}`}</p>
       <div className={styles.wrapper}>
         <span className="text text_type_main-medium ">{order.name}</span>
@@ -92,7 +98,7 @@ const OrderInfo = () => {
       </div>
       <div className={styles.ingredients}>
         <span className="text text_type_main-medium">Состав:</span>
-        <ul className={`${styles.list} scroller`}>
+        <ul className={clsx(styles.list, "scroller")}>
           {orderIngredients?.map((ingredient, index) => (
             <li key={index}>
               <IngredientCard

@@ -10,7 +10,9 @@ import {
 import CardImages from "./CardImages/CardImages";
 
 const OrderCard = ({ order, isProfile }) => {
-  const { ingredients } = useSelector((state) => state.burgerIngredients);
+  const ingredients = useSelector(
+    (state) => state.burgerIngredients.ingredients
+  );
   const location = useLocation();
 
   const ingredientsImages = order?.ingredients.map((id) => {

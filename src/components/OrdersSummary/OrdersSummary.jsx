@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useSelector } from "react-redux";
 import styles from "./OrdersSummary.module.scss";
 
@@ -7,13 +7,13 @@ const OrdersSummary = () => {
     (state) => state.ordersFeed
   );
 
-  const doneOrders = orders
-    .filter((order) => order.status === "done")
-    .slice(0, 15);
+  const doneOrders = useMemo(() => {
+    return orders.filter((order) => order.status === "done").slice(0, 15);
+  }, [orders]);
 
-  const pendingOrders = orders
-    .filter((order) => order.status === "pending")
-    .slice(0, 15);
+  const pendingOrders = useMemo(() => {
+    return orders.filter((order) => order.status === "pending").slice(0, 15);
+  }, [orders]);
 
   return (
     <div className={styles.container}>

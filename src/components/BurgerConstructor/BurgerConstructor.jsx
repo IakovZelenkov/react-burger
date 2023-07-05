@@ -40,7 +40,7 @@ const BurgerConstructor = () => {
 
   const dispatch = useDispatch();
   const ingredientsListRef = React.useRef();
-  const { user } = useSelector((state) => state.auth.user);
+  const user = useSelector((state) => state.auth.user.user);
   const navigate = useNavigate();
 
   const { bun, ingredients, loading } = useSelector((state) => ({
