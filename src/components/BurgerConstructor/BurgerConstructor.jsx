@@ -40,13 +40,13 @@ const BurgerConstructor = () => {
 
   const dispatch = useDispatch();
   const ingredientsListRef = React.useRef();
-  const { user } = useSelector((state) => state.auth.user);
+  const user = useSelector((state) => state.auth.user.user);
   const navigate = useNavigate();
 
-  const { bun, ingredients, orderNumber } = useSelector((state) => ({
+  const { bun, ingredients, loading } = useSelector((state) => ({
     bun: state.burgerConstructor.bun,
     ingredients: state.burgerConstructor.ingredients,
-    orderNumber: state.orderDetails.orderNumber,
+    loading: state.orderDetails.loading,
   }));
 
   const totalPrice =
@@ -83,7 +83,7 @@ const BurgerConstructor = () => {
     if (user === null) {
       navigate("/login");
     } else {
-      dispatch(submitOrder(bun, ingredients));
+      dispatch(submitOrder({ bun, ingredients }));
       dispatch(openOrderDetailsModal());
     }
   };
@@ -159,8 +159,7 @@ const BurgerConstructor = () => {
             dispatch(resetIngredientCount());
           }}
         >
-          {orderNumber === undefined ? <Loader /> : <OrderDetails />}
-          {/* <Loader /> */}
+          {loading === "pending" ? <Loader /> : <OrderDetails />}
         </Modal>
       )}
     </>

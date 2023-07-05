@@ -1,14 +1,15 @@
 .container {
   display: flex;
-  margin: 120px auto;
-  max-width: 860px;
+  margin: 44px auto;
+  // 120px 44px
+  max-width: 1240px;
 }
 
 .nav {
   display: flex;
   flex-direction: column;
-  margin-right: 60px;
-  width: 320px;
+  margin: 78px 60px 0 0;
+  max-width: 320px;
 }
 
 .navItems {
@@ -39,4 +40,5 @@
 
 .description {
   opacity: 0.4;
+  text-align: left;
 }

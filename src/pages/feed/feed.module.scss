@@ -1,0 +1,17 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  margin: 40px auto 0;
+  max-width: 1240px;
+}
+
+.orders {
+  display: flex;
+  max-width: 1240px;
+  margin: 20px auto 0;
+  gap: 56px;
+}
+
+.test {
+  width: 584px;
+}

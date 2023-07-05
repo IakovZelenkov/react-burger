@@ -23,27 +23,29 @@ const IngredientElement = ({ ingredient }) => {
   });
 
   return (
-    <Link
-      to={`/ingredients/${ingredient._id}`}
-      state={{ backgroundLocation: location }}
-      className={`${styles.link}`}
-      ref={dragRef}
-    >
-      {ingredientsCount[_id] > 0 && (
-        <Counter count={ingredientsCount[_id]} size="default" />
-      )}
-      <img
-        src={image}
-        alt="Ингредиент"
-        className={styles.image}
-        ref={dragPreviewRef}
-      />
-      <div className={styles.priceInfo}>
-        <span className="text text_type_main-medium">{price}</span>
-        <CurrencyIcon type="primary" />
-      </div>
-      <p className="text text_type_main-default">{name}</p>
-    </Link>
+    <li className={styles.listItem}>
+      <Link
+        to={`/ingredients/${ingredient._id}`}
+        state={{ backgroundLocation: location }}
+        className={`${styles.link}`}
+        ref={dragRef}
+      >
+        {ingredientsCount[_id] > 0 && (
+          <Counter count={ingredientsCount[_id]} size="default" />
+        )}
+        <img
+          src={image}
+          alt="Ингредиент"
+          className={styles.image}
+          ref={dragPreviewRef}
+        />
+        <div className={styles.priceInfo}>
+          <span className="text text_type_main-medium">{price}</span>
+          <CurrencyIcon type="primary" />
+        </div>
+        <p className="text text_type_main-default">{name}</p>
+      </Link>
+    </li>
   );
 };
 

@@ -1,9 +1,9 @@
 import React from "react";
 import styles from "./App.module.scss";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { getIngredient } from "../../services/slices/burgerIngredientsSlice";
-import { checkUserAuth } from "../../services/actions/authActions";
+import { useDispatch } from "react-redux";
+import { getIngredients } from "../../services/slices/burgerIngredientsSlice";
+import { checkUserAuth } from "../../services/slices/auth/actions";
 
 import { OnlyAuth, OnlyUnAuth } from "../ProtectedRoute/ProtectedRoute";
 import AppHeader from "../AppHeader/AppHeader";
@@ -19,6 +19,8 @@ import ProfileHome from "../../pages/profile/profile-home/profile-home";
 import ProfileOrders from "../../pages/profile/profile-orders/profile-orders";
 import Modal from "../Modal/Modal";
 import IngredientDetails from "../IngredientDetails/IngredientDetails";
+import FeedPage from "../../pages/feed/feed";
+import OrderInfo from "../OrderInfo/OrderInfo";
 
 function App() {
   const dispatch = useDispatch();
@@ -27,19 +29,17 @@ function App() {
   let state = location.state;
 
   React.useEffect(() => {
-    dispatch(getIngredient());
+    dispatch(getIngredients());
     dispatch(checkUserAuth());
   }, [dispatch]);
-
-  const ingredientDetailsModalOpen = useSelector(
-    (state) => state.modal.ingredientDetailsModalOpen
-  );
 
   return (
     <div className={styles.app}>
       <AppHeader />
       <Routes location={state?.backgroundLocation || location}>
         <Route path="/" element={<HomePage />} />
+        <Route path="/feed" element={<FeedPage />} />
+        <Route path="/feed/:orderNumber" element={<OrderInfo />} />
         <Route
           path="/login"
           element={<OnlyUnAuth component={<LoginPage />} />}
@@ -70,6 +70,10 @@ function App() {
           />
         </Route>
         <Route
+          path="/profile/orders/:orderNumber"
+          element={<OnlyAuth component={<OrderInfo />} />}
+        />
+        <Route
           path="/ingredients/:ingredientId"
           element={<IngredientsPage />}
         />
@@ -86,6 +90,30 @@ function App() {
                 }}
               >
                 <IngredientDetails />
+              </Modal>
+            }
+          />
+          <Route
+            path="/feed/:orderNumber"
+            element={
+              <Modal
+                onClose={() => {
+                  navigate(-1);
+                }}
+              >
+                <OrderInfo />
+              </Modal>
+            }
+          />
+          <Route
+            path="/profile/orders/:orderNumber"
+            element={
+              <Modal
+                onClose={() => {
+                  navigate(-1);
+                }}
+              >
+                <OrderInfo />
               </Modal>
             }
           />

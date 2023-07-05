@@ -1,47 +1,50 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { getIngredients } from "../../utils/api";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { getIngredientsRequest } from "../../utils/api";
 
 const initialState = {
   ingredients: [],
-  ingredientsRequest: false,
-  ingredientsFailed: false,
+  loading: "idle", // 'pending' | 'succeeded' | 'failed'
+  error: null,
 };
 
 const burgerIngredientsSlice = createSlice({
   name: "burgerIngredients",
   initialState,
   reducers: {
-    getIngredientsRequest: (state) => {
-      state.ingredientsRequest = true;
+    clearError: (state) => {
+      state.error = null;
     },
-    getIngredientsSuccess: (state, action) => {
-      state.ingredientsRequest = false;
-      state.ingredientsFailed = false;
-      state.ingredients = action.payload;
-    },
-    getIngredientsFailed: (state) => {
-      state.ingredientsFailed = true;
-      state.ingredientsRequest = false;
-    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getIngredients.pending, (state) => {
+        state.loading = "pending";
+        state.error = null;
+      })
+      .addCase(getIngredients.fulfilled, (state, action) => {
+        state.loading = "succeeded";
+        state.ingredients = action.payload;
+      })
+      .addCase(getIngredients.rejected, (state, action) => {
+        state.loading = "failed";
+        state.error = action.payload;
+      });
   },
 });
 
-export const getIngredient = () => (dispatch) => {
-  dispatch(getIngredientsRequest());
-  getIngredients()
-    .then((res) => {
-      dispatch(getIngredientsSuccess(res.data));
-    })
-    .catch((err) => {
-      console.error(err.message);
-      dispatch(getIngredientsFailed());
-    });
-};
+export const getIngredients = createAsyncThunk(
+  "burgerIngredients/getIngredients",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await getIngredientsRequest();
+      return res.data;
+    } catch (error) {
+      console.error(error.response.data.message);
+      return rejectWithValue(error.response.data.message);
+    }
+  }
+);
 
-export const {
-  getIngredientsRequest,
-  getIngredientsSuccess,
-  getIngredientsFailed,
-} = burgerIngredientsSlice.actions;
+export const { clearError } = burgerIngredientsSlice.actions;
 
 export default burgerIngredientsSlice.reducer;

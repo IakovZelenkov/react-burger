@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./forgot-password.module.scss";
+import Cookies from "js-cookie";
 import {
   EmailInput,
   Button,
@@ -7,33 +8,34 @@ import {
 
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setFormValue } from "../../services/slices/authSlice";
 import Loader from "../../components/Loader/Loader";
-import { forgotPassword } from "../../services/actions/authActions";
+import { forgotPassword } from "../../services/slices/auth/actions";
 
 const ForgotPasswordPage = () => {
-  const { email, request } = useSelector(
-    (state) => state.auth.forgotPasswordForm
-  );
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [form, setValue] = React.useState({ email: "" });
+  const { loading, error } = useSelector((state) => state.auth.forgotPassword);
+
   const onChange = (evt) => {
     const { value, name } = evt.target;
-    dispatch(
-      setFormValue({ value, fieldName: name, formName: "forgotPasswordForm" })
-    );
+    setValue({ ...form, [name]: value });
   };
 
   const onSubmit = (evt) => {
     evt.preventDefault();
-    dispatch(forgotPassword(email, () => navigate("/reset-password")));
+    dispatch(
+      forgotPassword({
+        email: form.email,
+        redirect: () => navigate("/reset-password"),
+      })
+    );
   };
 
-  localStorage.getItem("forgotPassword") === "success" && (
-    <Navigate replace to="/reset-password" />
-  );
+  if (Cookies.get("forgotPassword") === "success") {
+    <Navigate replace to="/reset-password" />;
+  }
 
   return (
     <div className={styles.container}>
@@ -41,21 +43,26 @@ const ForgotPasswordPage = () => {
         Восстановление пароля
       </h2>
       <form name="forgotPassword" className={styles.form} onSubmit={onSubmit}>
-        {request ? (
+        {loading === "pending" ? (
           <Loader />
         ) : (
           <>
             <EmailInput
-              value={email}
+              value={form.email}
               onChange={onChange}
               name={"email"}
               placeholder="Укажите e-mail"
             />
+            {error ? (
+              <p className="input__error text_type_main-default">{error}</p>
+            ) : (
+              ""
+            )}
             <Button
               htmlType="submit"
               type="primary"
               size="medium"
-              disabled={!email}
+              disabled={!form.email}
             >
               Восстановить
             </Button>

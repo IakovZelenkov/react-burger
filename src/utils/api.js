@@ -1,143 +1,98 @@
-import BASE_URL from "./constats";
 import { setToken } from "./cookie";
-
+import axios from "axios";
 import Cookies from "js-cookie";
+import { BASE_URL } from "./constants";
 
-const request = (url, options) => {
-  return fetch(url, options).then(checkResponse);
+axios.defaults.baseURL = BASE_URL;
+
+const axiosInstance = axios.create();
+
+axiosInstance.interceptors.response.use(
+  (response) => response.data,
+  async (error) => {
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      error.response.data.message === "jwt expired"
+    ) {
+      const refreshToken = Cookies.get("refreshToken");
+      const refreshResponse = await axios.post("/auth/token", {
+        token: refreshToken,
+      });
+
+      if (refreshResponse.data.success) {
+        setToken("refreshToken", refreshResponse.data.refreshToken);
+        setToken("accessToken", refreshResponse.data.accessToken);
+        error.config.headers.Authorization = `Bearer ${refreshResponse.data.accessToken}`;
+        return axiosInstance.request(error.config);
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
+
+export const getIngredientsRequest = () => {
+  return axiosInstance.get("/ingredients");
 };
 
-const checkResponse = (res) => {
-  return res.ok ? res.json() : res.json().then((err) => Promise.reject(err));
+export const createOrder = (ingredientsId) => {
+  const accessToken = Cookies.get("accessToken");
+  const headers = {
+    Authorization: `Bearer ${accessToken}`,
+  };
+
+  return axiosInstance.post(
+    "/orders",
+    { ingredients: ingredientsId },
+    { headers }
+  );
 };
 
-export const getIngredients = () => request(`${BASE_URL}/ingredients`);
+export const registerUserRequest = (name, email, password) => {
+  return axiosInstance.post("/auth/register", { email, password, name });
+};
 
-export const createOrder = (ingredientsId) =>
-  request(`${BASE_URL}/orders`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: "Bearer " + Cookies.get("accessToken"),
-    },
-    body: JSON.stringify({
-      ingredients: ingredientsId,
-    }),
-  });
+export const loginUserRequest = (email, password) => {
+  return axiosInstance.post("/auth/login", { email, password });
+};
 
-export const registerUserRequest = (name, email, password) =>
-  request(`${BASE_URL}/auth/register`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email: email,
-      password: password,
-      name: name,
-    }),
-  });
+export const logoutUserRequest = () => {
+  const refreshToken = Cookies.get("refreshToken");
 
-export const loginUserRequest = (email, password) =>
-  request(`${BASE_URL}/auth/login`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email: email,
-      password: password,
-    }),
-  });
-
-export const logoutUserRequest = () =>
-  request(`${BASE_URL}/auth/logout`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      token: Cookies.get("refreshToken"),
-    }),
-  });
+  return axiosInstance.post("/auth/logout", { token: refreshToken });
+};
 
 export const getUserRequest = () => {
-  return fetchWithRefresh(`${BASE_URL}/auth/user`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: "Bearer " + Cookies.get("accessToken"),
-    },
-  });
+  const accessToken = Cookies.get("accessToken");
+  const headers = {
+    Authorization: `Bearer ${accessToken}`,
+  };
+
+  return axiosInstance.get("/auth/user", { headers });
 };
 
 export const updateUserRequest = (name, email, password) => {
-  return fetchWithRefresh(`${BASE_URL}/auth/user`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: "Bearer " + Cookies.get("accessToken"),
-    },
-    body: JSON.stringify({
-      email: email,
-      password: password,
-      name: name,
-    }),
-  });
+  const accessToken = Cookies.get("accessToken");
+  const headers = {
+    Authorization: `Bearer ${accessToken}`,
+  };
+
+  return axiosInstance.patch(
+    "/auth/user",
+    { email, password, name },
+    { headers }
+  );
 };
 
-export const forgotPasswordRequest = (email) =>
-  request(`${BASE_URL}/password-reset`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email: email,
-    }),
-  });
-
-export const resetPasswordRequest = (password, token) =>
-  request(`${BASE_URL}/password-reset/reset`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      password: password,
-      token: token,
-    }),
-  });
-
-export const refreshToken = () => {
-  request(`${BASE_URL}/auth/token`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      token: Cookies.get("refreshToken"),
-    }),
-  });
+export const forgotPasswordRequest = (email) => {
+  return axiosInstance.post("/password-reset", { email });
 };
 
-export const fetchWithRefresh = async (url, options) => {
-  try {
-    const res = await fetch(url, options);
-    return await checkResponse(res);
-  } catch (err) {
-    if (err.message === "jwt expired") {
-      const refreshData = await refreshToken(); //обновляем токен
-      if (!refreshData.success) {
-        return Promise.reject(refreshData);
-      }
-      setToken("refreshToken", refreshData.refreshToken);
-      setToken("accessToken", refreshData.accessToken);
-      options.headers.authorization = refreshData.accessToken;
-      const res = await fetch(url, options); //повторяем запрос
-      return await checkResponse(res);
-    } else {
-      return Promise.reject(err);
-    }
-  }
+export const resetPasswordRequest = (password, token) => {
+  return axiosInstance.post("/password-reset/reset", { password, token });
+};
+
+export const getOrderRequest = (orderNumber) => {
+  return axios.get(`orders/${orderNumber}`);
 };

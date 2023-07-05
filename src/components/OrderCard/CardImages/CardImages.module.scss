@@ -1,0 +1,47 @@
+.container {
+  display: flex;
+  width: 304px;
+  position: relative;
+}
+
+.item {
+  width: 64px;
+  height: 64px;
+  border-radius: 100px;
+  background: #131316;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.border {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  border-radius: 100px;
+  background: linear-gradient(rgba(128, 26, 178, 1), rgba(76, 76, 255, 1));
+  padding: 2px;
+  margin-left: -5%;
+}
+
+.image {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  position: relative;
+}
+
+.last_item {
+  background: #1c1c21;
+
+  .image {
+    opacity: 0.4;
+  }
+}
+
+.count {
+  position: absolute;
+  top: 30%;
+  left: 30%;
+  z-index: 100;
+}

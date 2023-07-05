@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./reset-password.module.scss";
-
+import Cookies from "js-cookie";
 import {
   Input,
   PasswordInput,
@@ -8,32 +8,34 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setFormValue } from "../../services/slices/authSlice";
 import Loader from "../../components/Loader/Loader";
-import { resetPassword } from "../../services/actions/authActions";
+import { resetPassword } from "../../services/slices/auth/actions";
 
 const ResetPasswordPage = () => {
-  const { password, token, request } = useSelector(
-    (state) => state.auth.resetPasswordForm
-  );
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [form, setValue] = React.useState({ password: "", token: "" });
+  const { loading, error } = useSelector((state) => state.auth.resetPassword);
+
   const onChange = (evt) => {
     const { value, name } = evt.target;
-    dispatch(
-      setFormValue({ value, fieldName: name, formName: "resetPasswordForm" })
-    );
+    setValue({ ...form, [name]: value });
   };
 
   const onSubmit = (evt) => {
     evt.preventDefault();
-    dispatch(resetPassword(password, token, () => navigate("/login")));
+    dispatch(
+      resetPassword({
+        password: form.password,
+        token: form.token,
+        redirect: () => navigate("/login"),
+      })
+    );
   };
 
   React.useEffect(() => {
-    if (!localStorage.getItem("forgotPassword")) {
+    if (!Cookies.get("forgotPassword")) {
       navigate("/forgot-password");
     }
   }, []);
@@ -44,27 +46,32 @@ const ResetPasswordPage = () => {
         Восстановление пароля
       </h2>
       <form name="resetPassword" className={styles.form} onSubmit={onSubmit}>
-        {request ? (
+        {loading === "pending" ? (
           <Loader />
         ) : (
           <>
             <PasswordInput
-              value={password}
+              value={form.password}
               onChange={onChange}
               name={"password"}
               placeholder={"Введите новый пароль"}
             />
             <Input
-              value={token}
+              value={form.token}
               onChange={onChange}
               name={"token"}
               placeholder={"Введите код из письма"}
             />
+            {error ? (
+              <p className="input__error text_type_main-default">{error}</p>
+            ) : (
+              ""
+            )}
             <Button
               htmlType="submit"
               type="primary"
               size="medium"
-              disabled={!password || !token}
+              disabled={!form.password || !form.token}
             >
               Сохранить
             </Button>

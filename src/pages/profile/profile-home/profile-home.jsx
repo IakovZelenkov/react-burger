@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./profile-home.module.scss";
 import {
   EmailInput,
@@ -7,12 +7,15 @@ import {
   Input,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useSelector, useDispatch } from "react-redux";
-import { updateUser } from "../../../services/actions/authActions";
+import {
+  checkUserAuth,
+  updateUser,
+} from "../../../services/slices/auth/actions";
 
 const ProfileHome = () => {
   const { user } = useSelector((state) => state.auth.user);
   const [disabled, setDisabled] = React.useState(true);
-  const [formValues, setFormValues] = React.useState({
+  const [form, setValue] = React.useState({
     name: "",
     email: "",
     password: "",
@@ -21,7 +24,7 @@ const ProfileHome = () => {
   const inputRef = React.useRef(null);
   const onChange = (evt) => {
     const { value, name } = evt.target;
-    setFormValues({ ...formValues, [name]: value });
+    setValue({ ...form, [name]: value });
   };
 
   const onIconClick = () => {
@@ -32,30 +35,36 @@ const ProfileHome = () => {
   const onSubmit = (evt) => {
     evt.preventDefault();
     dispatch(
-      updateUser(formValues.name, formValues.email, formValues.password)
+      updateUser({
+        name: form.name,
+        email: form.email,
+        password: form.password,
+      })
     );
     setDisabled(true);
     resetFormValues();
   };
 
   const resetFormValues = () => {
-    setFormValues({ name: user.name, email: user.email, password: "" });
+    setValue({ name: user.name, email: user.email, password: "" });
     setDisabled(true);
   };
 
-  React.useEffect(() => {
-    setFormValues({ ...formValues, name: user.name, email: user.email });
+  useEffect(() => {
+    setValue({ ...form, name: user.name, email: user.email });
   }, [user.name, user.email]);
 
+  useEffect(() => {
+    dispatch(checkUserAuth());
+  }, [dispatch]);
+
   const checkForms = () => {
-    return !formValues.name || !formValues.email || !formValues.password;
+    return !form.name || !form.email || !form.password;
   };
 
   const showButtons = () => {
     return (
-      user.name !== formValues.name ||
-      user.email !== formValues.email ||
-      formValues.password
+      user.name !== form.name || user.email !== form.email || form.password
     );
   };
 
@@ -64,7 +73,7 @@ const ProfileHome = () => {
       <form name="profile" className={styles.form} onSubmit={onSubmit}>
         <Input
           ref={inputRef}
-          value={formValues.name}
+          value={form.name}
           onChange={onChange}
           name={"name"}
           placeholder={"Имя"}
@@ -78,14 +87,14 @@ const ProfileHome = () => {
           }}
         />
         <EmailInput
-          value={formValues.email}
+          value={form.email}
           onChange={onChange}
           name={"email"}
           placeholder="E-mail"
           isIcon={true}
         />
         <PasswordInput
-          value={formValues.password}
+          value={form.password}
           onChange={onChange}
           name={"password"}
           icon={"EditIcon"}
