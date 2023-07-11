@@ -1,9 +1,20 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  createAsyncThunk,
+  PayloadAction,
+} from "@reduxjs/toolkit";
 import { getIngredientsRequest } from "../../utils/api";
+import { TIngredient } from "../types/types";
 
-const initialState = {
+interface BurgerIngredientsState {
+  ingredients: TIngredient[];
+  status: "idle" | "pending" | "succeeded" | "failed";
+  error: string | null;
+}
+
+const initialState: BurgerIngredientsState = {
   ingredients: [],
-  loading: "idle", // 'pending' | 'succeeded' | 'failed'
+  status: "idle",
   error: null,
 };
 
@@ -18,16 +29,19 @@ const burgerIngredientsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getIngredients.pending, (state) => {
-        state.loading = "pending";
+        state.status = "pending";
         state.error = null;
       })
-      .addCase(getIngredients.fulfilled, (state, action) => {
-        state.loading = "succeeded";
-        state.ingredients = action.payload;
-      })
+      .addCase(
+        getIngredients.fulfilled,
+        (state, action: PayloadAction<TIngredient[]>) => {
+          state.status = "succeeded";
+          state.ingredients = action.payload;
+        }
+      )
       .addCase(getIngredients.rejected, (state, action) => {
-        state.loading = "failed";
-        state.error = action.payload;
+        state.status = "failed";
+        state.error = action.payload as string;
       });
   },
 });
@@ -38,7 +52,7 @@ export const getIngredients = createAsyncThunk(
     try {
       const res = await getIngredientsRequest();
       return res.data;
-    } catch (error) {
+    } catch (error: any) {
       console.error(error.response.data.message);
       return rejectWithValue(error.response.data.message);
     }

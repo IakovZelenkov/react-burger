@@ -14,7 +14,7 @@ import Loader from "../../components/Loader/Loader";
 const LoginPage = () => {
   const dispatch = useDispatch();
   const [form, setValue] = React.useState({ email: "", password: "" });
-  const { loading, error } = useSelector((state) => state.auth.login);
+  const { status, error } = useSelector((state) => state.auth.login);
 
   const onChange = (evt) => {
     const { value, name } = evt.target;
@@ -30,7 +30,7 @@ const LoginPage = () => {
     <div className={styles.container}>
       <h2 className="text text_type_main-medium mb-6">Вход</h2>
       <form name="login" className={styles.form} onSubmit={onSubmit}>
-        {loading === "pending" ? (
+        {status === "pending" ? (
           <Loader />
         ) : (
           <>

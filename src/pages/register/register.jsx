@@ -20,7 +20,7 @@ const RegisterPage = () => {
     password: "",
   });
 
-  const { loading, error } = useSelector((state) => state.auth.register);
+  const { status, error } = useSelector((state) => state.auth.register);
 
   const onChange = (evt) => {
     const { value, name } = evt.target;
@@ -41,7 +41,7 @@ const RegisterPage = () => {
     <div className={styles.container}>
       <h2 className="text text_type_main-medium mb-6">Регистрация</h2>
       <form name="login" className={styles.form} onSubmit={onSubmit}>
-        {loading === "pending" ? (
+        {status === "pending" ? (
           <Loader />
         ) : (
           <>

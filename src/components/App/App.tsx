@@ -1,7 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./App.module.scss";
-import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import {
+  Routes,
+  Route,
+  useLocation,
+  useNavigate,
+  NavigateFunction,
+} from "react-router-dom";
 import { getIngredients } from "../../services/slices/burgerIngredientsSlice";
 import { checkUserAuth } from "../../services/slices/auth/actions";
 
@@ -21,14 +26,15 @@ import Modal from "../Modal/Modal";
 import IngredientDetails from "../IngredientDetails/IngredientDetails";
 import FeedPage from "../../pages/feed/feed";
 import OrderInfo from "../OrderInfo/OrderInfo";
+import { useAppDispatch } from "../../services/hooks/hooks";
 
 function App() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const navigate: NavigateFunction = useNavigate();
   const location = useLocation();
-  let state = location.state;
+  let state: any = location.state;
 
-  React.useEffect(() => {
+  useEffect(() => {
     dispatch(getIngredients());
     dispatch(checkUserAuth());
   }, [dispatch]);

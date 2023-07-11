@@ -1,6 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
 import burgerIngredientsReducer from "./slices/burgerIngredientsSlice";
-import ingredientDetailsReducer from "./slices/ingredientDetailsSlice";
 import burgerConstructorReducer from "./slices/burgerConstructorSlice";
 import orderDetailsReducer from "./slices/orderDetailsSlice";
 import modalReducer from "./slices/modalSlice";
@@ -30,7 +29,6 @@ const ordersFeedMiddleware = socketMiddleware({
 export const store = configureStore({
   reducer: {
     burgerIngredients: burgerIngredientsReducer,
-    ingredientDetails: ingredientDetailsReducer,
     burgerConstructor: burgerConstructorReducer,
     orderDetails: orderDetailsReducer,
     modal: modalReducer,
@@ -41,3 +39,7 @@ export const store = configureStore({
     return getDefaultMiddleware().concat(ordersFeedMiddleware);
   },
 });
+
+export type RootState = ReturnType<typeof store.getState>;
+// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
+export type AppDispatch = typeof store.dispatch;

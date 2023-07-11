@@ -12,24 +12,24 @@ import {
 const initialState = {
   user: {
     user: null,
-    loading: "idle", // 'pending' | 'succeeded' | 'failed'
+    status: "idle", // 'pending' | 'succeeded' | 'failed'
     error: null,
     isAuthChecked: false,
   },
   login: {
-    loading: "idle",
+    status: "idle",
     error: null,
   },
   register: {
-    loading: "idle",
+    status: "idle",
     error: null,
   },
   forgotPassword: {
-    loading: "idle",
+    status: "idle",
     error: null,
   },
   resetPassword: {
-    loading: "idle",
+    status: "idle",
     error: null,
   },
 };
@@ -56,95 +56,95 @@ export const authSlice = createSlice({
     builder
       // User
       .addCase(getUser.pending, (state) => {
-        state.user.loading = "pending";
+        state.user.status = "pending";
         state.user.error = null;
       })
       .addCase(getUser.fulfilled, (state, action) => {
-        state.user.loading = "succeeded";
+        state.user.status = "succeeded";
         state.user.user = action.payload;
         state.user.isAuthChecked = true;
       })
       .addCase(getUser.rejected, (state, action) => {
-        state.user.loading = "failed";
+        state.user.status = "failed";
         state.user.error = action.payload;
         state.user.user = null;
       })
       // Register
       .addCase(registerUser.pending, (state) => {
-        state.register.loading = "pending";
+        state.register.status = "pending";
         state.register.error = null;
       })
       .addCase(registerUser.fulfilled, (state, action) => {
-        state.register.loading = "succeeded";
+        state.register.status = "succeeded";
         state.user.user = action.payload;
         state.user.isAuthChecked = true;
       })
       .addCase(registerUser.rejected, (state, action) => {
-        state.register.loading = "failed";
+        state.register.status = "failed";
         state.register.error = action.payload;
       })
       // Login
       .addCase(loginUser.pending, (state) => {
-        state.login.loading = "pending";
+        state.login.status = "pending";
         state.login.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        state.login.loading = "succeeded";
+        state.login.status = "succeeded";
         state.user.user = action.payload;
         state.user.isAuthChecked = true;
       })
       .addCase(loginUser.rejected, (state, action) => {
-        state.login.loading = "failed";
+        state.login.status = "failed";
         state.login.error = action.payload;
       })
       // Logout
       .addCase(logoutUser.pending, (state) => {
-        state.user.loading = "pending";
+        state.user.status = "pending";
         state.user.error = null;
       })
       .addCase(logoutUser.fulfilled, (state) => {
-        state.user.loading = "succeeded";
+        state.user.status = "succeeded";
         state.user.user = null;
       })
       .addCase(logoutUser.rejected, (state, action) => {
-        state.user.loading = "failed";
+        state.user.status = "failed";
         state.user.error = action.payload;
       })
       // UpdateUser
       .addCase(updateUser.pending, (state) => {
-        state.user.loading = "pending";
+        state.user.status = "pending";
         state.user.error = null;
       })
       .addCase(updateUser.fulfilled, (state, action) => {
-        state.user.loading = "succeeded";
+        state.user.status = "succeeded";
         state.user.user = action.payload;
       })
       .addCase(updateUser.rejected, (state, action) => {
-        state.user.loading = "failed";
+        state.user.status = "failed";
         state.user.error = action.payload;
       })
       // ForgotPassword
       .addCase(forgotPassword.pending, (state) => {
-        state.forgotPassword.loading = "pending";
+        state.forgotPassword.status = "pending";
         state.forgotPassword.error = null;
       })
       .addCase(forgotPassword.fulfilled, (state) => {
-        state.forgotPassword.loading = "succeeded";
+        state.forgotPassword.status = "succeeded";
       })
       .addCase(forgotPassword.rejected, (state, action) => {
-        state.forgotPassword.loading = "failed";
+        state.forgotPassword.status = "failed";
         state.forgotPassword.error = action.payload;
       })
       // ResetPassword
       .addCase(resetPassword.pending, (state) => {
-        state.resetPassword.loading = "pending";
+        state.resetPassword.status = "pending";
         state.resetPassword.error = null;
       })
       .addCase(resetPassword.fulfilled, (state) => {
-        state.resetPassword.loading = "succeeded";
+        state.resetPassword.status = "succeeded";
       })
       .addCase(resetPassword.rejected, (state, action) => {
-        state.resetPassword.loading = "failed";
+        state.resetPassword.status = "failed";
         state.resetPassword.error = action.payload;
       });
   },

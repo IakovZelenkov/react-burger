@@ -1,34 +1,35 @@
-import React from "react";
+import React, { useRef, useMemo, useEffect } from "react";
 import styles from "./BurgerIngredients.module.scss";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import IngredientsSection from "../IngredientsSection/IngredientsSection";
-import { useSelector } from "react-redux";
 import { useInView } from "react-intersection-observer";
+import { useAppSelector } from "../../services/hooks/hooks";
+import { TIngredient } from "../../services/types/types";
 
-const BurgerIngredients = () => {
+const BurgerIngredients: React.FC = () => {
   const [inViewBun, bunInView] = useInView({ threshold: 0.5 });
   const [inViewMain, mainInView] = useInView({ threshold: 0.5 });
   const [inViewSauce, sauceInView] = useInView({ threshold: 0.5 });
-  const [active, setActive] = React.useState("");
+  const [active, setActive] = React.useState<string>("");
 
   const bunRef = {
-    titleRef: React.useRef(),
+    titleRef: useRef<HTMLDivElement>(null),
     inViewRef: inViewBun,
   };
   const mainRef = {
-    titleRef: React.useRef(),
+    titleRef: useRef<HTMLDivElement>(null),
     inViewRef: inViewMain,
   };
   const sauceRef = {
-    titleRef: React.useRef(),
+    titleRef: useRef<HTMLDivElement>(null),
     inViewRef: inViewSauce,
   };
 
-  const ingredients = useSelector(
+  const ingredients = useAppSelector(
     (state) => state.burgerIngredients.ingredients
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (bunInView) {
       setActive("bun");
     } else if (mainInView) {
@@ -38,14 +39,17 @@ const BurgerIngredients = () => {
     }
   }, [bunInView, mainInView, sauceInView]);
 
-  const ingredientsSorted = React.useMemo(() => {
-    return ingredients.reduce((acc, item) => {
-      if (!acc[item.type]) {
-        acc[item.type] = [];
-      }
-      acc[item.type].push(item);
-      return acc;
-    }, {});
+  const ingredientsSorted = useMemo(() => {
+    return ingredients.reduce(
+      (acc: { [key: string]: TIngredient[] }, item: TIngredient) => {
+        if (!acc[item.type]) {
+          acc[item.type] = [];
+        }
+        acc[item.type].push(item);
+        return acc;
+      },
+      {}
+    );
   }, [ingredients]);
 
   return (
@@ -57,27 +61,30 @@ const BurgerIngredients = () => {
       <div className={`${styles.tabs} pb-10`}>
         <Tab
           active={active === "bun"}
+          value="bun"
           onClick={() => {
-            setActive();
-            bunRef.titleRef.current.scrollIntoView({ behavior: "smooth" });
+            setActive("bun");
+            bunRef.titleRef.current?.scrollIntoView({ behavior: "smooth" });
           }}
         >
           Булки
         </Tab>
         <Tab
           active={active === "main"}
+          value="main"
           onClick={() => {
-            setActive();
-            mainRef.titleRef.current.scrollIntoView({ behavior: "smooth" });
+            setActive("main");
+            mainRef.titleRef.current?.scrollIntoView({ behavior: "smooth" });
           }}
         >
           Начинки
         </Tab>
         <Tab
           active={active === "sauce"}
+          value="sauce"
           onClick={() => {
-            setActive();
-            sauceRef.titleRef.current.scrollIntoView({ behavior: "smooth" });
+            setActive("sauce");
+            sauceRef.titleRef.current?.scrollIntoView({ behavior: "smooth" });
           }}
         >
           Соусы
@@ -88,16 +95,19 @@ const BurgerIngredients = () => {
           <IngredientsSection
             title="Булки"
             ingredients={ingredientsSorted.bun}
+            // @ts-ignore Wrong type
             ref={bunRef}
           />
           <IngredientsSection
             title="Начинки"
             ingredients={ingredientsSorted.main}
+            // @ts-ignore Wrong type
             ref={mainRef}
           />
           <IngredientsSection
             title="Соусы"
             ingredients={ingredientsSorted.sauce}
+            // @ts-ignore Wrong type
             ref={sauceRef}
           />
         </div>

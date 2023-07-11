@@ -16,7 +16,7 @@ const ResetPasswordPage = () => {
   const navigate = useNavigate();
 
   const [form, setValue] = React.useState({ password: "", token: "" });
-  const { loading, error } = useSelector((state) => state.auth.resetPassword);
+  const { status, error } = useSelector((state) => state.auth.resetPassword);
 
   const onChange = (evt) => {
     const { value, name } = evt.target;
@@ -46,7 +46,7 @@ const ResetPasswordPage = () => {
         Восстановление пароля
       </h2>
       <form name="resetPassword" className={styles.form} onSubmit={onSubmit}>
-        {loading === "pending" ? (
+        {status === "pending" ? (
           <Loader />
         ) : (
           <>

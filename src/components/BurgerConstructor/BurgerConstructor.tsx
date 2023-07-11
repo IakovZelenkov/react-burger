@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import Modal from "../Modal/Modal";
 import OrderDetails from "../OrderDetails/OrderDetails.jsx";
 import Loader from "../Loader/Loader";
@@ -9,8 +9,6 @@ import {
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./BurgerConstructor.module.scss";
-
-import { useSelector, useDispatch } from "react-redux";
 
 import {
   addIngredient,
@@ -30,30 +28,32 @@ import { v4 as uuidv4 } from "uuid";
 import {
   openOrderDetailsModal,
   closeOrderDetailsModalOpen,
-} from "../../services/slices/modalSlice.js";
+} from "../../services/slices/modalSlice";
 import { useNavigate } from "react-router-dom";
+import { useAppSelector, useAppDispatch } from "../../services/hooks/hooks";
+import { TConstructorIngredient } from "../../services/types/types";
 
 const BurgerConstructor = () => {
-  const orderDetailsModalOpen = useSelector(
+  const orderDetailsModalOpen = useAppSelector(
     (state) => state.modal.orderDetailsModalOpen
   );
 
-  const dispatch = useDispatch();
-  const ingredientsListRef = React.useRef();
-  const user = useSelector((state) => state.auth.user.user);
+  const dispatch = useAppDispatch();
+  const ingredientsListRef = useRef<HTMLUListElement>(null);
+  const user = useAppSelector((state) => state.auth.user.user);
   const navigate = useNavigate();
 
-  const { bun, ingredients, loading } = useSelector((state) => ({
+  const { bun, ingredients, status } = useAppSelector((state) => ({
     bun: state.burgerConstructor.bun,
     ingredients: state.burgerConstructor.ingredients,
-    loading: state.orderDetails.loading,
+    status: state.orderDetails.status,
   }));
 
   const totalPrice =
     ingredients.reduce((acc, ingredient) => acc + ingredient.price, 0) +
     (bun === undefined ? 0 : bun.price * 2);
 
-  const handleDrop = (ingredient) => {
+  const handleDrop = (ingredient: TConstructorIngredient) => {
     if (ingredient.type !== "bun" && bun === undefined) {
       window.alert("Сначала добавьте булку");
       return;
@@ -62,7 +62,7 @@ const BurgerConstructor = () => {
     dispatch(increaseIngredientCount(ingredient));
 
     setTimeout(() => {
-      ingredientsListRef.current.scroll({
+      ingredientsListRef.current?.scroll({
         top: ingredientsListRef.current.scrollHeight,
         behavior: "smooth",
       });
@@ -74,7 +74,7 @@ const BurgerConstructor = () => {
     collect: (monitor) => ({
       isHover: monitor.isOver(),
     }),
-    drop(ingredient) {
+    drop(ingredient: any) {
       handleDrop(ingredient);
     },
   });
@@ -83,7 +83,7 @@ const BurgerConstructor = () => {
     if (user === null) {
       navigate("/login");
     } else {
-      dispatch(submitOrder({ bun, ingredients }));
+      bun && dispatch(submitOrder({ bun, ingredients }));
       dispatch(openOrderDetailsModal());
     }
   };
@@ -159,7 +159,7 @@ const BurgerConstructor = () => {
             dispatch(resetIngredientCount());
           }}
         >
-          {loading === "pending" ? <Loader /> : <OrderDetails />}
+          {status === "pending" ? <Loader /> : <OrderDetails />}
         </Modal>
       )}
     </>

@@ -6,7 +6,7 @@ import BurgerConstructor from "../../components/BurgerConstructor/BurgerConstruc
 
 import styles from "./home.module.scss";
 
-const HomePage = () => {
+const HomePage: React.FC = () => {
   return (
     <DndProvider backend={HTML5Backend}>
       <div className={styles.container}>

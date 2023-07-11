@@ -1,24 +1,32 @@
-import React from "react";
-import ingredientType from "../../../utils/types";
-import PropTypes from "prop-types";
+import React, { useRef, useCallback } from "react";
 import {
   ConstructorElement,
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./ConstructorIngredient.module.scss";
-import { useDispatch } from "react-redux";
 import {
   deleteIngredient,
   decreaseIngredientCount,
 } from "../../../services/slices/burgerConstructorSlice";
-import { useDrag, useDrop } from "react-dnd";
+import { XYCoord, useDrag, useDrop, DropTargetMonitor } from "react-dnd";
 import { moveIngredient } from "../../../services/slices/burgerConstructorSlice";
+import { useAppDispatch } from "../../../services/hooks/hooks";
+import { TConstructorIngredient } from "../../../services/types/types";
 
-const ConstructorIngredient = ({ item, index }) => {
-  const dispatch = useDispatch();
-  const ref = React.useRef(null);
-  const updateIngredientsOrder = React.useCallback(
-    (dragIndex, hoverIndex) => {
+type ConstructorIngredientProps = {
+  item: TConstructorIngredient;
+  index: number;
+};
+
+const ConstructorIngredient: React.FC<ConstructorIngredientProps> = ({
+  item,
+  index,
+}) => {
+  const dispatch = useAppDispatch();
+  const ref = useRef<HTMLDivElement>(null);
+
+  const updateIngredientsOrder = useCallback(
+    (dragIndex: number, hoverIndex: number) => {
       dispatch(moveIngredient({ dragIndex, hoverIndex }));
     },
     [dispatch]
@@ -26,12 +34,12 @@ const ConstructorIngredient = ({ item, index }) => {
 
   const [{ handlerId }, drop] = useDrop({
     accept: "item",
-    collect(monitor) {
+    collect(monitor: DropTargetMonitor) {
       return {
         handlerId: monitor.getHandlerId(),
       };
     },
-    hover(item, monitor) {
+    hover(item: any, monitor) {
       if (!ref.current) {
         return;
       }
@@ -49,7 +57,7 @@ const ConstructorIngredient = ({ item, index }) => {
 
       const clientOffset = monitor.getClientOffset();
 
-      const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+      const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
 
       if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
         return;
@@ -82,7 +90,7 @@ const ConstructorIngredient = ({ item, index }) => {
       className={styles.container}
     >
       <div className={styles.icon}>
-        <DragIcon />
+        <DragIcon type="primary" />
       </div>
       <ConstructorElement
         text={item.name}
@@ -98,8 +106,3 @@ const ConstructorIngredient = ({ item, index }) => {
 };
 
 export default ConstructorIngredient;
-
-ConstructorIngredient.propTypes = {
-  item: ingredientType.isRequired,
-  index: PropTypes.number.isRequired,
-};

@@ -1,9 +1,21 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  createAsyncThunk,
+  PayloadAction,
+} from "@reduxjs/toolkit";
 import { createOrder, getOrderRequest } from "../../utils/api";
+import { TIngredient } from "../types/types";
 
-const initialState = {
+interface OrderDetailsState {
+  orderNumber: number | undefined;
+  status: "idle" | "pending" | "succeeded" | "failed";
+  error: string | null;
+  order: [];
+}
+
+const initialState: OrderDetailsState = {
   orderNumber: undefined,
-  loading: "idle", // 'pending' | 'succeeded' | 'failed'
+  status: "idle",
   error: null,
   order: [],
 };
@@ -22,29 +34,32 @@ const orderDetailsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(submitOrder.pending, (state) => {
-        state.loading = "pending";
+        state.status = "pending";
         state.error = null;
       })
-      .addCase(submitOrder.fulfilled, (state, action) => {
-        state.loading = "succeeded";
-        state.orderNumber = action.payload;
-      })
+      .addCase(
+        submitOrder.fulfilled,
+        (state, action: PayloadAction<number>) => {
+          state.status = "succeeded";
+          state.orderNumber = action.payload;
+        }
+      )
       .addCase(submitOrder.rejected, (state, action) => {
-        state.loading = "failed";
-        state.error = action.payload;
+        state.status = "failed";
+        state.error = action.payload as string;
       })
       .addCase(getOrder.pending, (state) => {
-        state.loading = "pending";
+        state.status = "pending";
         state.error = null;
         state.order = [];
       })
       .addCase(getOrder.fulfilled, (state, action) => {
-        state.loading = "succeeded";
+        state.status = "succeeded";
         state.order = action.payload;
       })
       .addCase(getOrder.rejected, (state, action) => {
-        state.loading = "failed";
-        state.error = action.payload;
+        state.status = "failed";
+        state.error = action.payload as string;
         state.order = [];
       });
   },
@@ -52,14 +67,17 @@ const orderDetailsSlice = createSlice({
 
 export const submitOrder = createAsyncThunk(
   "orderDetails/submitOrder",
-  async ({ bun, ingredients }, { rejectWithValue }) => {
+  async (
+    { bun, ingredients }: { bun: TIngredient; ingredients: TIngredient[] },
+    { rejectWithValue }
+  ) => {
     try {
       const ingredientsId = ingredients.map((ingredient) => ingredient._id);
       ingredientsId.push(bun._id);
       ingredientsId.unshift(bun._id);
-      const res = await createOrder(ingredientsId);
-      return res.order.number;
-    } catch (error) {
+      const { data } = await createOrder(ingredientsId);
+      return data.order.number;
+    } catch (error: any) {
       console.error(error.response.data.message);
       return rejectWithValue(error.response.data.message);
     }
@@ -72,7 +90,7 @@ export const getOrder = createAsyncThunk(
     try {
       const res = await getOrderRequest(orderNumber);
       return res.data.orders[0];
-    } catch (error) {
+    } catch (error: any) {
       console.error(error.response.data.message);
       return rejectWithValue(error.response.data.message);
     }

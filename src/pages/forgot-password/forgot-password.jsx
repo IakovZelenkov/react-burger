@@ -16,7 +16,7 @@ const ForgotPasswordPage = () => {
   const navigate = useNavigate();
 
   const [form, setValue] = React.useState({ email: "" });
-  const { loading, error } = useSelector((state) => state.auth.forgotPassword);
+  const { status, error } = useSelector((state) => state.auth.forgotPassword);
 
   const onChange = (evt) => {
     const { value, name } = evt.target;
@@ -43,7 +43,7 @@ const ForgotPasswordPage = () => {
         Восстановление пароля
       </h2>
       <form name="forgotPassword" className={styles.form} onSubmit={onSubmit}>
-        {loading === "pending" ? (
+        {status === "pending" ? (
           <Loader />
         ) : (
           <>

@@ -14,7 +14,7 @@ import clsx from "clsx";
 const OrderInfo = () => {
   const dispatch = useDispatch();
   const { orderNumber } = useParams();
-  const { order, loading } = useSelector((state) => state.orderDetails);
+  const { order, status } = useSelector((state) => state.orderDetails);
   const ingredients = useSelector(
     (state) => state.burgerIngredients.ingredients
   );
@@ -73,7 +73,7 @@ const OrderInfo = () => {
     return <span className={className}>{text}</span>;
   };
 
-  if (loading === "pending") {
+  if (status === "pending") {
     return (
       <div className={styles.container}>
         <Loader />
