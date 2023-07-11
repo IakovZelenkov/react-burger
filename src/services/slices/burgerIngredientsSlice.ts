@@ -3,11 +3,12 @@ import {
   createAsyncThunk,
   PayloadAction,
 } from "@reduxjs/toolkit";
-import { getIngredientsRequest } from "../../utils/api";
-import { TIngredient } from "../types/types";
+import { geIIngredientsRequest } from "../../utils/api";
+import { IIngredient } from "../types/types";
+import axios from "axios";
 
 interface BurgerIngredientsState {
-  ingredients: TIngredient[];
+  ingredients: IIngredient[];
   status: "idle" | "pending" | "succeeded" | "failed";
   error: string | null;
 }
@@ -28,33 +29,36 @@ const burgerIngredientsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getIngredients.pending, (state) => {
+      .addCase(geIIngredients.pending, (state) => {
         state.status = "pending";
         state.error = null;
       })
       .addCase(
-        getIngredients.fulfilled,
-        (state, action: PayloadAction<TIngredient[]>) => {
+        geIIngredients.fulfilled,
+        (state, action: PayloadAction<IIngredient[]>) => {
           state.status = "succeeded";
           state.ingredients = action.payload;
         }
       )
-      .addCase(getIngredients.rejected, (state, action) => {
+      .addCase(geIIngredients.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload as string;
       });
   },
 });
 
-export const getIngredients = createAsyncThunk(
-  "burgerIngredients/getIngredients",
+export const geIIngredients = createAsyncThunk(
+  "burgerIngredients/geIIngredients",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await getIngredientsRequest();
+      const res = await geIIngredientsRequest();
       return res.data;
-    } catch (error: any) {
-      console.error(error.response.data.message);
-      return rejectWithValue(error.response.data.message);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.message);
+      } else {
+        console.error(error);
+      }
     }
   }
 );

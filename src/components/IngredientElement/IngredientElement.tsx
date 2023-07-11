@@ -1,19 +1,25 @@
 import React from "react";
 import styles from "./IngredientElement.module.scss";
-import ingredientType from "../../utils/types.js";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../../services/hooks/hooks";
 import { useDrag } from "react-dnd";
 import { useLocation, Link } from "react-router-dom";
 import {
   Counter,
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import { IIngredient } from "../../services/types/types";
 
-const IngredientElement = ({ ingredient }) => {
+type IngredientElementProps = {
+  ingredient: IIngredient;
+};
+
+const IngredientElement: React.FC<IngredientElementProps> = ({
+  ingredient,
+}) => {
   const location = useLocation();
 
   const { image, price, name, _id } = ingredient;
-  const ingredientsCount = useSelector(
+  const ingredientsCount = useAppSelector(
     (state) => state.burgerConstructor.ingredientsCount
   );
 
@@ -47,10 +53,6 @@ const IngredientElement = ({ ingredient }) => {
       </Link>
     </li>
   );
-};
-
-IngredientElement.propTypes = {
-  ingredient: ingredientType.isRequired,
 };
 
 export default IngredientElement;

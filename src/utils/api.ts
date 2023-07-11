@@ -32,11 +32,11 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-export const getIngredientsRequest = () => {
+export const geIIngredientsRequest = () => {
   return axiosInstance.get("/ingredients");
 };
 
-export const createOrder = (ingredientsId) => {
+export const createOrder = (ingredientsId: string[]) => {
   const accessToken = Cookies.get("accessToken");
   const headers = {
     Authorization: `Bearer ${accessToken}`,
@@ -49,11 +49,15 @@ export const createOrder = (ingredientsId) => {
   );
 };
 
-export const registerUserRequest = (name, email, password) => {
+export const registerUserRequest = (
+  name: string,
+  email: string,
+  password: string
+) => {
   return axiosInstance.post("/auth/register", { email, password, name });
 };
 
-export const loginUserRequest = (email, password) => {
+export const loginUserRequest = (email: string, password: string) => {
   return axiosInstance.post("/auth/login", { email, password });
 };
 
@@ -72,7 +76,11 @@ export const getUserRequest = () => {
   return axiosInstance.get("/auth/user", { headers });
 };
 
-export const updateUserRequest = (name, email, password) => {
+export const updateUserRequest = (
+  name: string,
+  email: string,
+  password: string
+) => {
   const accessToken = Cookies.get("accessToken");
   const headers = {
     Authorization: `Bearer ${accessToken}`,
@@ -85,14 +93,14 @@ export const updateUserRequest = (name, email, password) => {
   );
 };
 
-export const forgotPasswordRequest = (email) => {
+export const forgotPasswordRequest = (email: string) => {
   return axiosInstance.post("/password-reset", { email });
 };
 
-export const resetPasswordRequest = (password, token) => {
+export const resetPasswordRequest = (password: string, token: string) => {
   return axiosInstance.post("/password-reset/reset", { password, token });
 };
 
-export const getOrderRequest = (orderNumber) => {
+export const getOrderRequest = (orderNumber: string) => {
   return axios.get(`orders/${orderNumber}`);
 };

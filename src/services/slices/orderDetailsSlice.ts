@@ -4,7 +4,8 @@ import {
   PayloadAction,
 } from "@reduxjs/toolkit";
 import { createOrder, getOrderRequest } from "../../utils/api";
-import { TIngredient } from "../types/types";
+import { IIngredient, ICreateOrderResponse } from "../types/types";
+import axios from "axios";
 
 interface OrderDetailsState {
   orderNumber: number | undefined;
@@ -68,31 +69,37 @@ const orderDetailsSlice = createSlice({
 export const submitOrder = createAsyncThunk(
   "orderDetails/submitOrder",
   async (
-    { bun, ingredients }: { bun: TIngredient; ingredients: TIngredient[] },
+    { bun, ingredients }: { bun: IIngredient; ingredients: IIngredient[] },
     { rejectWithValue }
   ) => {
     try {
       const ingredientsId = ingredients.map((ingredient) => ingredient._id);
       ingredientsId.push(bun._id);
       ingredientsId.unshift(bun._id);
-      const { data } = await createOrder(ingredientsId);
-      return data.order.number;
-    } catch (error: any) {
-      console.error(error.response.data.message);
-      return rejectWithValue(error.response.data.message);
+      const res: any = await createOrder(ingredientsId);
+      return res.order.number;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.message);
+      } else {
+        console.error(error);
+      }
     }
   }
 );
 
 export const getOrder = createAsyncThunk(
   "orderDetails/getOrder",
-  async (orderNumber, { rejectWithValue }) => {
+  async (orderNumber: string, { rejectWithValue }) => {
     try {
       const res = await getOrderRequest(orderNumber);
       return res.data.orders[0];
-    } catch (error: any) {
-      console.error(error.response.data.message);
-      return rejectWithValue(error.response.data.message);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.message);
+      } else {
+        console.error(error);
+      }
     }
   }
 );

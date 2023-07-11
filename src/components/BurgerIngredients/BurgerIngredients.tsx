@@ -4,7 +4,7 @@ import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import IngredientsSection from "../IngredientsSection/IngredientsSection";
 import { useInView } from "react-intersection-observer";
 import { useAppSelector } from "../../services/hooks/hooks";
-import { TIngredient } from "../../services/types/types";
+import { IIngredient } from "../../services/types/types";
 
 const BurgerIngredients: React.FC = () => {
   const [inViewBun, bunInView] = useInView({ threshold: 0.5 });
@@ -12,18 +12,22 @@ const BurgerIngredients: React.FC = () => {
   const [inViewSauce, sauceInView] = useInView({ threshold: 0.5 });
   const [active, setActive] = React.useState<string>("");
 
-  const bunRef = {
-    titleRef: useRef<HTMLDivElement>(null),
-    inViewRef: inViewBun,
-  };
-  const mainRef = {
-    titleRef: useRef<HTMLDivElement>(null),
-    inViewRef: inViewMain,
-  };
-  const sauceRef = {
-    titleRef: useRef<HTMLDivElement>(null),
-    inViewRef: inViewSauce,
-  };
+  // const bunRef = {
+  //   titleRef: useRef<HTMLHeadingElement>(null),
+  //   inViewRef: inViewBun,
+  // };
+  // const mainRef = {
+  //   titleRef: useRef<HTMLHeadingElement>(null),
+  //   inViewRef: inViewMain,
+  // };
+  // const sauceRef = {
+  //   titleRef: useRef<HTMLHeadingElement>(null),
+  //   inViewRef: inViewSauce,
+  // };
+
+  const bunRef = useRef<HTMLHeadingElement>(null);
+  const mainRef = useRef<HTMLHeadingElement>(null);
+  const sauceRef = useRef<HTMLHeadingElement>(null);
 
   const ingredients = useAppSelector(
     (state) => state.burgerIngredients.ingredients
@@ -41,7 +45,7 @@ const BurgerIngredients: React.FC = () => {
 
   const ingredientsSorted = useMemo(() => {
     return ingredients.reduce(
-      (acc: { [key: string]: TIngredient[] }, item: TIngredient) => {
+      (acc: { [key: string]: IIngredient[] }, item: IIngredient) => {
         if (!acc[item.type]) {
           acc[item.type] = [];
         }
@@ -64,7 +68,7 @@ const BurgerIngredients: React.FC = () => {
           value="bun"
           onClick={() => {
             setActive("bun");
-            bunRef.titleRef.current?.scrollIntoView({ behavior: "smooth" });
+            bunRef.current?.scrollIntoView({ behavior: "smooth" });
           }}
         >
           Булки
@@ -74,7 +78,7 @@ const BurgerIngredients: React.FC = () => {
           value="main"
           onClick={() => {
             setActive("main");
-            mainRef.titleRef.current?.scrollIntoView({ behavior: "smooth" });
+            mainRef.current?.scrollIntoView({ behavior: "smooth" });
           }}
         >
           Начинки
@@ -84,7 +88,7 @@ const BurgerIngredients: React.FC = () => {
           value="sauce"
           onClick={() => {
             setActive("sauce");
-            sauceRef.titleRef.current?.scrollIntoView({ behavior: "smooth" });
+            sauceRef.current?.scrollIntoView({ behavior: "smooth" });
           }}
         >
           Соусы
@@ -95,20 +99,20 @@ const BurgerIngredients: React.FC = () => {
           <IngredientsSection
             title="Булки"
             ingredients={ingredientsSorted.bun}
-            // @ts-ignore Wrong type
             ref={bunRef}
+            inViewRef={inViewBun}
           />
           <IngredientsSection
             title="Начинки"
             ingredients={ingredientsSorted.main}
-            // @ts-ignore Wrong type
             ref={mainRef}
+            inViewRef={inViewMain}
           />
           <IngredientsSection
             title="Соусы"
             ingredients={ingredientsSorted.sauce}
-            // @ts-ignore Wrong type
             ref={sauceRef}
+            inViewRef={inViewSauce}
           />
         </div>
       )}

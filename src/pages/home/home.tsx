@@ -5,8 +5,16 @@ import BurgerIngredients from "../../components/BurgerIngredients/BurgerIngredie
 import BurgerConstructor from "../../components/BurgerConstructor/BurgerConstructor";
 
 import styles from "./home.module.scss";
+import { useAppSelector } from "../../services/hooks/hooks";
 
 const HomePage: React.FC = () => {
+  const ingredientsError = useAppSelector(
+    (state) => state.burgerIngredients.error
+  );
+
+  if (ingredientsError) {
+    return <div className={styles.error}>{ingredientsError}</div>;
+  }
   return (
     <DndProvider backend={HTML5Backend}>
       <div className={styles.container}>
