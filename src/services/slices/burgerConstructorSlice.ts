@@ -26,6 +26,9 @@ const burgerConstructorSlice = createSlice({
       }>
     ) => {
       if (action.payload.ingredient.type === "bun") {
+        if (state.bun) {
+          state.ingredientsCount[state.bun._id] = 0;
+        }
         state.bun = action.payload.ingredient;
       } else {
         const ingredient = {
@@ -46,7 +49,7 @@ const burgerConstructorSlice = createSlice({
         state.ingredients.splice(index, 1);
       }
     },
-    reseIngredients: (state) => {
+    resetIngredients: (state) => {
       state.bun = undefined;
       state.ingredients = [];
     },
@@ -66,7 +69,7 @@ const burgerConstructorSlice = createSlice({
     },
     increaseIngredientCount: (
       state,
-      action: PayloadAction<{ _id: string }>
+      action: PayloadAction<ConstructorIngredientType>
     ) => {
       const id = action.payload._id;
       state.ingredientsCount = {
@@ -76,7 +79,7 @@ const burgerConstructorSlice = createSlice({
     },
     decreaseIngredientCount: (
       state,
-      action: PayloadAction<{ _id: string }>
+      action: PayloadAction<ConstructorIngredientType>
     ) => {
       const id = action.payload._id;
       const count = state.ingredientsCount[id];
@@ -99,7 +102,7 @@ const burgerConstructorSlice = createSlice({
 export const {
   addIngredient,
   deleteIngredient,
-  reseIngredients,
+  resetIngredients,
   moveIngredient,
   increaseIngredientCount,
   decreaseIngredientCount,

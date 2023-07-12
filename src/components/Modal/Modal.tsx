@@ -7,12 +7,15 @@ import ModalOverlay from "./ModalOverlay";
 
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
-const modal = document.getElementById("modal");
+interface ModalProps {
+  onClose: () => void;
+  children: React.ReactNode;
+}
 
-const Modal = (props) => {
+const Modal: React.FC<ModalProps> = (props) => {
   const { onClose, children } = props;
 
-  const handleEscClose = (evt) => {
+  const handleEscClose = (evt: KeyboardEvent) => {
     if (evt.key === "Escape") {
       onClose();
     }
@@ -35,7 +38,7 @@ const Modal = (props) => {
         {children}
       </div>
     </div>,
-    modal
+    document.getElementById("modal")!
   );
 };
 

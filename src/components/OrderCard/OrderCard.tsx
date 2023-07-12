@@ -1,16 +1,21 @@
 import React from "react";
 import styles from "./OrderCard.module.scss";
-import PropTypes from "prop-types";
-import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import {
   CurrencyIcon,
   FormattedDate,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import CardImages from "./CardImages/CardImages";
+import { OrderType } from "../../services/types/types";
+import { useAppSelector } from "../../services/hooks/hooks";
 
-const OrderCard = ({ order, isProfile }) => {
-  const ingredients = useSelector(
+interface OrderCardProps {
+  order: OrderType;
+  isProfile: boolean;
+}
+
+const OrderCard: React.FC<OrderCardProps> = ({ order, isProfile }) => {
+  const ingredients = useAppSelector(
     (state) => state.burgerIngredients.ingredients
   );
   const location = useLocation();
@@ -22,14 +27,14 @@ const OrderCard = ({ order, isProfile }) => {
 
   const ingredientsPrice = order?.ingredients.map((id) => {
     const ingredient = ingredients.find((ingredient) => ingredient._id === id);
-    return ingredient ? ingredient.price : "";
+    return ingredient ? ingredient.price : 0;
   });
-
-  const totalPrice = ingredientsPrice.reduce((a, b) => a + b);
 
   if (ingredientsImages.includes("")) {
     return null;
   }
+
+  const totalPrice = ingredientsPrice.reduce((a: number, b: number) => a + b);
 
   let path;
 
@@ -91,11 +96,6 @@ const OrderCard = ({ order, isProfile }) => {
       </div>
     </Link>
   );
-};
-
-OrderCard.propTypes = {
-  order: PropTypes.object.isRequired,
-  isProfile: PropTypes.bool,
 };
 
 export default OrderCard;

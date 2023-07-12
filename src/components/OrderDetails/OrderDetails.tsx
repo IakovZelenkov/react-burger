@@ -1,10 +1,12 @@
 import React from "react";
 import styles from "./OrderDetails.module.scss";
 import doneIcon from "../../images/doneIcon.svg";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../../services/hooks/hooks";
 
-const OrderDetails = () => {
-  const orderNumber = useSelector((state) => state.orderDetails.orderNumber);
+const OrderDetails: React.FC = () => {
+  const orderNumber = useAppSelector(
+    (state) => state.orderDetails.orderNumber
+  );
   return (
     <div className={styles.container}>
       <h2

@@ -31,11 +31,10 @@ const OrderInfo: React.FC = () => {
   const orderIngredients = useMemo(() => {
     return order?.ingredients.reduce(
       (accumulator: IOrderInfoIngredient[], id) => {
-        // @ts-ignore
         const ingredient = ingredients.find((item) => item._id === id);
         if (ingredient) {
           const existingIngredient = accumulator.find(
-            (item: IOrderInfoIngredient) => item.name === ingredient.name
+            (item) => item.name === ingredient.name
           );
           if (existingIngredient) {
             existingIngredient.count++;

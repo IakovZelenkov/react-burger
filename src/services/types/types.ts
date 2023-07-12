@@ -30,7 +30,7 @@ export interface OwnerType {
 }
 
 export interface OrderType {
-  ingredients: IngredientType[];
+  ingredients: string[];
   _id: string;
   owner: OwnerType;
   status: string;

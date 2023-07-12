@@ -1,9 +1,12 @@
 import React from "react";
-import PropTypes from "prop-types";
 import clsx from "clsx";
 import styles from "./CardImages.module.scss";
 
-const CardImages = ({ ingredientsImages }) => {
+interface CardImagesProps {
+  ingredientsImages: string[];
+}
+
+const CardImages: React.FC<CardImagesProps> = ({ ingredientsImages }) => {
   const maxVisibleImages = 6;
   const remainingIngredientsCount =
     ingredientsImages.length - maxVisibleImages + 1;
@@ -37,10 +40,6 @@ const CardImages = ({ ingredientsImages }) => {
       })}
     </div>
   );
-};
-
-CardImages.propTypes = {
-  ingredientsImages: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default CardImages;

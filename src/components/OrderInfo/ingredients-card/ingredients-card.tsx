@@ -1,11 +1,23 @@
 import React from "react";
 import styles from "./ingredients-card.module.scss";
-import PropTypes from "prop-types";
-import { useLocation, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
-const IngredientCard = ({ name, image, count, price, ingredientId }) => {
-  const location = useLocation();
+interface IngredientCardProps {
+  name: string;
+  image: string;
+  count: number;
+  price: number;
+  ingredientId: string;
+}
+
+const IngredientCard: React.FC<IngredientCardProps> = ({
+  name,
+  image,
+  count,
+  price,
+  ingredientId,
+}) => {
   return (
     <Link
       to={`/ingredients/${ingredientId}`}
@@ -21,18 +33,10 @@ const IngredientCard = ({ name, image, count, price, ingredientId }) => {
         <span className="text text_type_digits-default">
           {count} x {price}
         </span>
-        <CurrencyIcon />
+        <CurrencyIcon type="primary" />
       </div>
     </Link>
   );
-};
-
-IngredientCard.propTypes = {
-  name: PropTypes.string.isRequired,
-  image: PropTypes.string.isRequired,
-  count: PropTypes.number.isRequired,
-  price: PropTypes.number.isRequired,
-  ingredientId: PropTypes.string.isRequired,
 };
 
 export default IngredientCard;

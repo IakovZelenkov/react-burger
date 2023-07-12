@@ -12,7 +12,7 @@ import styles from "./BurgerConstructor.module.scss";
 
 import {
   addIngredient,
-  reseIngredients,
+  resetIngredients,
   increaseIngredientCount,
   reseIngredientCount,
 } from "../../services/slices/burgerConstructorSlice";
@@ -155,7 +155,7 @@ const BurgerConstructor: React.FC = () => {
           onClose={() => {
             dispatch(closeOrderDetailsModalOpen());
             dispatch(resetOrder());
-            dispatch(reseIngredients());
+            dispatch(resetIngredients());
             dispatch(reseIngredientCount());
           }}
         >
