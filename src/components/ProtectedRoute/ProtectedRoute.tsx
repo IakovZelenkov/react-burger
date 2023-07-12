@@ -1,11 +1,19 @@
-import { useSelector } from "react-redux";
+import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
-import PropTypes from "prop-types";
 import Loader from "../Loader/Loader";
 import styles from "./ProtectedRoute.module.scss";
+import { useAppSelector } from "../../services/hooks/hooks";
 
-const Protected = ({ onlyUnAuth = false, component }) => {
-  const { user, isAuthChecked } = useSelector((store) => store.auth.user);
+interface ProtectedProps {
+  onlyUnAuth?: boolean;
+  component: JSX.Element;
+}
+
+const Protected: React.FC<ProtectedProps> = ({
+  onlyUnAuth = false,
+  component: Component,
+}) => {
+  const { user, isAuthChecked } = useAppSelector((store) => store.auth);
   const location = useLocation();
 
   if (!isAuthChecked) {
@@ -25,15 +33,10 @@ const Protected = ({ onlyUnAuth = false, component }) => {
     return <Navigate to="/login" state={{ from: location }} />;
   }
 
-  return component;
+  return Component;
 };
 
-export const OnlyAuth = Protected;
-export const OnlyUnAuth = ({ component }) => (
+export const OnlyAuth: React.FC<ProtectedProps> = Protected;
+export const OnlyUnAuth: React.FC<ProtectedProps> = ({ component }) => (
   <Protected onlyUnAuth component={component} />
 );
-
-Protected.propTypes = {
-  onlyUnAuth: PropTypes.bool,
-  component: PropTypes.node.isRequired,
-};

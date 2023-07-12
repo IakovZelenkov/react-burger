@@ -1,14 +1,13 @@
 import React from "react";
 import styles from "./profile.module.scss";
-
-import { useDispatch } from "react-redux";
 import { NavLink, useMatch } from "react-router-dom";
 import { logoutUser } from "../../services/slices/auth/actions";
+import { useAppDispatch } from "../../services/hooks/hooks";
 
 import { Outlet } from "react-router-dom";
 
-const ProfilePage = () => {
-  const dispatch = useDispatch();
+const ProfilePage: React.FC = () => {
+  const dispatch = useAppDispatch();
   const match = useMatch({
     path: "/profile/orders",
     end: true,

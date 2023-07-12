@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./not-found.module.scss";
 
-const NotFound = () => {
+const NotFound: React.FC = () => {
   return (
     <div className={styles.container}>
       <p className="text text_type_digits-medium">

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import styles from "./register.module.scss";
 import {
   EmailInput,
@@ -6,28 +6,27 @@ import {
   Button,
   Input,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../../services/slices/auth/actions";
 import Loader from "../../components/Loader/Loader";
+import { useAppDispatch, useAppSelector } from "../../services/hooks/hooks";
 
-const RegisterPage = () => {
-  const dispatch = useDispatch();
-  const [form, setValue] = React.useState({
+const RegisterPage: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const [form, setValue] = useState({
     name: "",
     email: "",
     password: "",
   });
 
-  const { status, error } = useSelector((state) => state.auth.register);
+  const { status, error } = useAppSelector((state) => state.auth);
 
-  const onChange = (evt) => {
+  const onChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = evt.target;
     setValue({ ...form, [name]: value });
   };
 
-  const onSubmit = (evt) => {
+  const onSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
     dispatch(
       registerUser({

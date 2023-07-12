@@ -1,6 +1,6 @@
 import Cookies from "js-cookie";
 
-export const setToken = (name, value) => {
+export const setToken = (name: string, value: string) => {
   let inTwentyMinutes = new Date(new Date().getTime() + 20 * 60 * 1000);
   let authToken = value;
   if (value.indexOf("Bearer") === 0) {

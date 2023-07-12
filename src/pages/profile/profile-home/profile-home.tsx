@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./profile-home.module.scss";
 import {
   EmailInput,
@@ -6,33 +6,33 @@ import {
   Button,
   Input,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useSelector, useDispatch } from "react-redux";
 import {
   checkUserAuth,
   updateUser,
 } from "../../../services/slices/auth/actions";
+import { useAppSelector, useAppDispatch } from "../../../services/hooks/hooks";
 
-const ProfileHome = () => {
-  const { user } = useSelector((state) => state.auth.user);
-  const [disabled, setDisabled] = React.useState(true);
-  const [form, setValue] = React.useState({
+const ProfileHome: React.FC = () => {
+  const user = useAppSelector((state) => state.auth.user);
+  const [disabled, setDisabled] = useState(true);
+  const [form, setValue] = useState({
     name: "",
     email: "",
     password: "",
   });
-  const dispatch = useDispatch();
-  const inputRef = React.useRef(null);
-  const onChange = (evt) => {
+  const dispatch = useAppDispatch();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const onChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = evt.target;
     setValue({ ...form, [name]: value });
   };
 
   const onIconClick = () => {
     setDisabled(!disabled);
-    setTimeout(() => inputRef.current.focus(), 0);
+    setTimeout(() => inputRef.current?.focus(), 0);
   };
 
-  const onSubmit = (evt) => {
+  const onSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
     dispatch(
       updateUser({
@@ -46,13 +46,13 @@ const ProfileHome = () => {
   };
 
   const resetFormValues = () => {
-    setValue({ name: user.name, email: user.email, password: "" });
+    user && setValue({ name: user.name, email: user.email, password: "" });
     setDisabled(true);
   };
 
   useEffect(() => {
-    setValue({ ...form, name: user.name, email: user.email });
-  }, [user.name, user.email]);
+    user && setValue({ ...form, name: user.name, email: user.email });
+  }, [user?.name, user?.email]);
 
   useEffect(() => {
     dispatch(checkUserAuth());
@@ -64,7 +64,8 @@ const ProfileHome = () => {
 
   const showButtons = () => {
     return (
-      user.name !== form.name || user.email !== form.email || form.password
+      user &&
+      (user.name !== form.name || user.email !== form.email || form.password)
     );
   };
 

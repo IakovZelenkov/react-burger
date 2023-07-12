@@ -12,9 +12,9 @@ import styles from "./BurgerConstructor.module.scss";
 
 import {
   addIngredient,
-  reseIIngredients,
+  reseIngredients,
   increaseIngredientCount,
-  reseIIngredientCount,
+  reseIngredientCount,
 } from "../../services/slices/burgerConstructorSlice";
 
 import {
@@ -31,7 +31,7 @@ import {
 } from "../../services/slices/modalSlice";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../../services/hooks/hooks";
-import { IConstructorIngredient } from "../../services/types/types";
+import { ConstructorIngredientType } from "../../services/types/types";
 
 const BurgerConstructor: React.FC = () => {
   const orderDetailsModalOpen = useAppSelector(
@@ -40,7 +40,7 @@ const BurgerConstructor: React.FC = () => {
 
   const dispatch = useAppDispatch();
   const ingredientsListRef = useRef<HTMLUListElement>(null);
-  const user = useAppSelector((state) => state.auth.user.user);
+  const user = useAppSelector((state) => state.auth.user);
   const navigate = useNavigate();
 
   const { bun, ingredients, status } = useAppSelector((state) => ({
@@ -53,7 +53,7 @@ const BurgerConstructor: React.FC = () => {
     ingredients.reduce((acc, ingredient) => acc + ingredient.price, 0) +
     (bun === undefined ? 0 : bun.price * 2);
 
-  const handleDrop = (ingredient: IConstructorIngredient) => {
+  const handleDrop = (ingredient: ConstructorIngredientType) => {
     if (ingredient.type !== "bun" && bun === undefined) {
       window.alert("Сначала добавьте булку");
       return;
@@ -155,8 +155,8 @@ const BurgerConstructor: React.FC = () => {
           onClose={() => {
             dispatch(closeOrderDetailsModalOpen());
             dispatch(resetOrder());
-            dispatch(reseIIngredients());
-            dispatch(reseIIngredientCount());
+            dispatch(reseIngredients());
+            dispatch(reseIngredientCount());
           }}
         >
           {status === "pending" ? <Loader /> : <OrderDetails />}

@@ -3,12 +3,12 @@ import {
   createAsyncThunk,
   PayloadAction,
 } from "@reduxjs/toolkit";
-import { geIIngredientsRequest } from "../../utils/api";
-import { IIngredient } from "../types/types";
+import { geIngredientsRequest } from "../../utils/api";
+import { IngredientType } from "../types/types";
 import axios from "axios";
 
 interface BurgerIngredientsState {
-  ingredients: IIngredient[];
+  ingredients: IngredientType[];
   status: "idle" | "pending" | "succeeded" | "failed";
   error: string | null;
 }
@@ -29,39 +29,40 @@ const burgerIngredientsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(geIIngredients.pending, (state) => {
+      .addCase(geIngredients.pending, (state) => {
         state.status = "pending";
         state.error = null;
       })
       .addCase(
-        geIIngredients.fulfilled,
-        (state, action: PayloadAction<IIngredient[]>) => {
+        geIngredients.fulfilled,
+        (state, action: PayloadAction<IngredientType[]>) => {
           state.status = "succeeded";
           state.ingredients = action.payload;
         }
       )
-      .addCase(geIIngredients.rejected, (state, action) => {
+      .addCase(geIngredients.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload as string;
       });
   },
 });
 
-export const geIIngredients = createAsyncThunk(
-  "burgerIngredients/geIIngredients",
-  async (_, { rejectWithValue }) => {
-    try {
-      const res = await geIIngredientsRequest();
-      return res.data;
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        return rejectWithValue(error.message);
-      } else {
-        console.error(error);
-      }
+export const geIngredients = createAsyncThunk<
+  IngredientType[],
+  undefined,
+  { rejectValue: string }
+>("burgerIngredients/geIngredients", async (_, { rejectWithValue }) => {
+  try {
+    const { data } = await geIngredientsRequest();
+    return data.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return rejectWithValue(error.message);
+    } else {
+      console.error(error);
     }
   }
-);
+});
 
 export const { clearError } = burgerIngredientsSlice.actions;
 

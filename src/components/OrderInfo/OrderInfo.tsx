@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo } from "react";
 import styles from "./OrderInfo.module.scss";
 import { useLocation, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import { getOrder } from "../../services/slices/orderDetailsSlice";
 import Loader from "../Loader/Loader";
 import IngredientCard from "./ingredients-card/ingredients-card";
@@ -10,54 +9,70 @@ import {
   FormattedDate,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import clsx from "clsx";
+import { useAppDispatch, useAppSelector } from "../../services/hooks/hooks";
 
-const OrderInfo = () => {
-  const dispatch = useDispatch();
+interface IOrderInfoIngredient {
+  name: string;
+  image: string;
+  price: number;
+  count: number;
+  ingredientId: string;
+}
+
+const OrderInfo: React.FC = () => {
+  const dispatch = useAppDispatch();
   const { orderNumber } = useParams();
-  const { order, status } = useSelector((state) => state.orderDetails);
-  const ingredients = useSelector(
+  const { order, status } = useAppSelector((state) => state.orderDetails);
+  const ingredients = useAppSelector(
     (state) => state.burgerIngredients.ingredients
   );
   const location = useLocation();
 
-  const orderIngredients = order.ingredients?.reduce((accumulator, id) => {
-    const ingredient = ingredients.find((ingredient) => ingredient._id === id);
-    if (ingredient) {
-      const existingIngredient = accumulator.find(
-        (item) => item.name === ingredient.name
-      );
-      if (existingIngredient) {
-        existingIngredient.count++;
-      } else {
-        accumulator.push({
-          name: ingredient.name,
-          image: ingredient.image_mobile,
-          price: ingredient.price,
-          ingredientId: ingredient._id,
-          count: 1,
-        });
-      }
-    }
-    return accumulator;
-  }, []);
+  const orderIngredients = useMemo(() => {
+    return order?.ingredients.reduce(
+      (accumulator: IOrderInfoIngredient[], id) => {
+        // @ts-ignore
+        const ingredient = ingredients.find((item) => item._id === id);
+        if (ingredient) {
+          const existingIngredient = accumulator.find(
+            (item: IOrderInfoIngredient) => item.name === ingredient.name
+          );
+          if (existingIngredient) {
+            existingIngredient.count++;
+          } else {
+            accumulator.push({
+              name: ingredient.name,
+              image: ingredient.image_mobile,
+              price: ingredient.price,
+              ingredientId: ingredient._id,
+              count: 1,
+            });
+          }
+        }
+        return accumulator;
+      },
+      []
+    );
+  }, [order, ingredients]);
 
   const totalPrice = useMemo(() => {
-    if (!orderIngredients) return 0;
-
-    return orderIngredients.reduce((sum, ingredient) => {
-      return sum + ingredient.price * ingredient.count;
-    }, 0);
+    return orderIngredients?.reduce(
+      (sum, ingredient: IOrderInfoIngredient) => {
+        return sum + ingredient.price * ingredient.count;
+      },
+      0
+    );
   }, [orderIngredients]);
 
   useEffect(() => {
-    dispatch(getOrder(orderNumber));
+    orderNumber && dispatch(getOrder(orderNumber));
   }, [dispatch]);
 
   const orderStatus = () => {
     let text = "Создан";
     let className = styles.created;
 
-    switch (order.status) {
+    switch (order?.status) {
       case "pending":
         text = "Готовится";
         className = styles.pending;
@@ -73,7 +88,7 @@ const OrderInfo = () => {
     return <span className={className}>{text}</span>;
   };
 
-  if (status === "pending") {
+  if (status === "pending" || order === undefined) {
     return (
       <div className={styles.container}>
         <Loader />
@@ -91,9 +106,9 @@ const OrderInfo = () => {
         className={clsx("text text_type_digits-default mb-5", {
           [styles.number_modal]: location.state,
         })}
-      >{`#${order.number}`}</p>
+      >{`#${order?.number}`}</p>
       <div className={styles.wrapper}>
-        <span className="text text_type_main-medium ">{order.name}</span>
+        <span className="text text_type_main-medium ">{order?.name}</span>
         {orderStatus()}
       </div>
       <div className={styles.ingredients}>

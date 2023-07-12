@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import update from "immutability-helper";
-import { IConstructorIngredient, IIngredient } from "../types/types";
+import { ConstructorIngredientType, IngredientType } from "../types/types";
 
 interface BurgerConstructorState {
-  bun?: IIngredient;
-  ingredients: IConstructorIngredient[];
+  bun?: IngredientType;
+  ingredients: ConstructorIngredientType[];
   ingredientsCount: { [ingredientId: string]: number };
 }
 
@@ -21,7 +21,7 @@ const burgerConstructorSlice = createSlice({
     addIngredient: (
       state,
       action: PayloadAction<{
-        ingredient: IConstructorIngredient;
+        ingredient: ConstructorIngredientType;
         uniqueID: string;
       }>
     ) => {
@@ -37,7 +37,7 @@ const burgerConstructorSlice = createSlice({
     },
     deleteIngredient: (
       state,
-      action: PayloadAction<IConstructorIngredient>
+      action: PayloadAction<ConstructorIngredientType>
     ) => {
       const index = state.ingredients.findIndex(
         (obj) => obj.uniqueID === action.payload.uniqueID
@@ -46,7 +46,7 @@ const burgerConstructorSlice = createSlice({
         state.ingredients.splice(index, 1);
       }
     },
-    reseIIngredients: (state) => {
+    reseIngredients: (state) => {
       state.bun = undefined;
       state.ingredients = [];
     },
@@ -90,7 +90,7 @@ const burgerConstructorSlice = createSlice({
         }
       }
     },
-    reseIIngredientCount: (state) => {
+    reseIngredientCount: (state) => {
       state.ingredientsCount = {};
     },
   },
@@ -99,11 +99,11 @@ const burgerConstructorSlice = createSlice({
 export const {
   addIngredient,
   deleteIngredient,
-  reseIIngredients,
+  reseIngredients,
   moveIngredient,
   increaseIngredientCount,
   decreaseIngredientCount,
-  reseIIngredientCount,
+  reseIngredientCount,
 } = burgerConstructorSlice.actions;
 
 export default burgerConstructorSlice.reducer;

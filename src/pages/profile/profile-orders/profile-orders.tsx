@@ -2,10 +2,10 @@ import React, { useEffect } from "react";
 import styles from "./profile-orders.module.scss";
 import Orders from "../../../components/Orders/Orders";
 import { checkUserAuth } from "../../../services/slices/auth/actions";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "../../../services/hooks/hooks";
 
-const ProfileOrders = () => {
-  const dispatch = useDispatch();
+const ProfileOrders: React.FC = () => {
+  const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(checkUserAuth());
   }, [dispatch]);

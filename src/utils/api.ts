@@ -8,7 +8,7 @@ axios.defaults.baseURL = BASE_URL;
 const axiosInstance = axios.create();
 
 axiosInstance.interceptors.response.use(
-  (response) => response.data,
+  (response) => response,
   async (error) => {
     if (
       error.response &&
@@ -32,11 +32,11 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-export const geIIngredientsRequest = () => {
+export const geIngredientsRequest = () => {
   return axiosInstance.get("/ingredients");
 };
 
-export const createOrder = (ingredientsId: string[]) => {
+export const createOrderRequest = (ingredientsId: string[]) => {
   const accessToken = Cookies.get("accessToken");
   const headers = {
     Authorization: `Bearer ${accessToken}`,
@@ -47,6 +47,10 @@ export const createOrder = (ingredientsId: string[]) => {
     { ingredients: ingredientsId },
     { headers }
   );
+};
+
+export const getOrderRequest = (orderNumber: string) => {
+  return axiosInstance.get(`orders/${orderNumber}`);
 };
 
 export const registerUserRequest = (
@@ -99,8 +103,4 @@ export const forgotPasswordRequest = (email: string) => {
 
 export const resetPasswordRequest = (password: string, token: string) => {
   return axiosInstance.post("/password-reset/reset", { password, token });
-};
-
-export const getOrderRequest = (orderNumber: string) => {
-  return axios.get(`orders/${orderNumber}`);
 };

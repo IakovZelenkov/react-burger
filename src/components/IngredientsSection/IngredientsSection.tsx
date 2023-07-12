@@ -1,17 +1,17 @@
 import React, { forwardRef, Ref } from "react";
 import styles from "./IngredientsSection.module.scss";
 import IngredientElement from "../IngredientElement/IngredientElement";
-import { IIngredient } from "../../services/types/types";
+import { IngredientType } from "../../services/types/types";
 
-interface IIngredientsSectionProps {
+interface IngredientsSectionProps {
   title: string;
-  ingredients: IIngredient[];
+  ingredients: IngredientType[];
   inViewRef: Ref<HTMLUListElement>;
 }
 
 const IngredientsSection = forwardRef<
   HTMLHeadingElement,
-  IIngredientsSectionProps
+  IngredientsSectionProps
 >(({ title, ingredients, inViewRef }, ref) => {
   return (
     <div className={`${styles.section}`}>

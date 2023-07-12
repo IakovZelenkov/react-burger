@@ -7,10 +7,10 @@ import {
   Counter,
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { IIngredient } from "../../services/types/types";
+import { IngredientType } from "../../services/types/types";
 
 type IngredientElementProps = {
-  ingredient: IIngredient;
+  ingredient: IngredientType;
 };
 
 const IngredientElement: React.FC<IngredientElementProps> = ({

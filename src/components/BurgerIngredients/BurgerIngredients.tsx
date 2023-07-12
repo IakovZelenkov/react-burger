@@ -4,7 +4,7 @@ import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import IngredientsSection from "../IngredientsSection/IngredientsSection";
 import { useInView } from "react-intersection-observer";
 import { useAppSelector } from "../../services/hooks/hooks";
-import { IIngredient } from "../../services/types/types";
+import { IngredientType } from "../../services/types/types";
 
 const BurgerIngredients: React.FC = () => {
   const [inViewBun, bunInView] = useInView({ threshold: 0.5 });
@@ -45,7 +45,7 @@ const BurgerIngredients: React.FC = () => {
 
   const ingredientsSorted = useMemo(() => {
     return ingredients.reduce(
-      (acc: { [key: string]: IIngredient[] }, item: IIngredient) => {
+      (acc: { [key: string]: IngredientType[] }, item: IngredientType) => {
         if (!acc[item.type]) {
           acc[item.type] = [];
         }

@@ -7,23 +7,23 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../components/Loader/Loader";
 import { forgotPassword } from "../../services/slices/auth/actions";
+import { useAppDispatch, useAppSelector } from "../../services/hooks/hooks";
 
-const ForgotPasswordPage = () => {
-  const dispatch = useDispatch();
+const ForgotPasswordPage: React.FC = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const [form, setValue] = React.useState({ email: "" });
-  const { status, error } = useSelector((state) => state.auth.forgotPassword);
+  const { status, error } = useAppSelector((state) => state.auth);
 
-  const onChange = (evt) => {
+  const onChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = evt.target;
     setValue({ ...form, [name]: value });
   };
 
-  const onSubmit = (evt) => {
+  const onSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
     dispatch(
       forgotPassword({

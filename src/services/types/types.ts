@@ -1,4 +1,4 @@
-export interface IIngredient {
+export interface IngredientType {
   _id: string;
   name: string;
   type: "bun" | "main" | "sauce";
@@ -13,31 +13,41 @@ export interface IIngredient {
   __v: number;
 }
 
-export interface IConstructorIngredient extends IIngredient {
+export interface UserType {
+  email: string;
+  name: string;
+}
+
+export interface ConstructorIngredientType extends IngredientType {
   uniqueID: string;
 }
 
-export interface IOwner {
+export interface OwnerType {
   name: string;
   email: string;
   createdAt: string;
   updatedAt: string;
 }
 
-export interface IOrder {
-  ingredients: IIngredient[];
+export interface OrderType {
+  ingredients: IngredientType[];
   _id: string;
-  owner: IOwner;
+  owner: OwnerType;
   status: string;
   name: string;
   createdAt: string;
   updatedAt: string;
-  number: number;
-  price: number;
+  number: string;
+  price?: number;
+  __v?: number;
 }
 
-export interface ICreateOrderResponse {
+export interface CreateOrderResponseType {
   success: boolean;
   name: string;
-  order: IOrder;
+  order: OrderType;
+}
+
+export interface GetOrderResponseType {
+  orders: OrderType[];
 }

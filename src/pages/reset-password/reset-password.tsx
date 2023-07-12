@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./reset-password.module.scss";
 import Cookies from "js-cookie";
 import {
@@ -7,23 +7,23 @@ import {
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../components/Loader/Loader";
 import { resetPassword } from "../../services/slices/auth/actions";
+import { useAppDispatch, useAppSelector } from "../../services/hooks/hooks";
 
-const ResetPasswordPage = () => {
-  const dispatch = useDispatch();
+const ResetPasswordPage: React.FC = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const [form, setValue] = React.useState({ password: "", token: "" });
-  const { status, error } = useSelector((state) => state.auth.resetPassword);
+  const [form, setValue] = useState({ password: "", token: "" });
+  const { status, error } = useAppSelector((state) => state.auth);
 
-  const onChange = (evt) => {
+  const onChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = evt.target;
     setValue({ ...form, [name]: value });
   };
 
-  const onSubmit = (evt) => {
+  const onSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
     dispatch(
       resetPassword({
@@ -34,7 +34,7 @@ const ResetPasswordPage = () => {
     );
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!Cookies.get("forgotPassword")) {
       navigate("/forgot-password");
     }

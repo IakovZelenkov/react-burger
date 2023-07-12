@@ -7,7 +7,7 @@ import {
   useNavigate,
   NavigateFunction,
 } from "react-router-dom";
-import { geIIngredients } from "../../services/slices/burgerIngredientsSlice";
+import { geIngredients } from "../../services/slices/burgerIngredientsSlice";
 import { checkUserAuth } from "../../services/slices/auth/actions";
 
 import { OnlyAuth, OnlyUnAuth } from "../ProtectedRoute/ProtectedRoute";
@@ -30,12 +30,12 @@ import { useAppDispatch } from "../../services/hooks/hooks";
 
 function App() {
   const dispatch = useAppDispatch();
-  const navigate: NavigateFunction = useNavigate();
+  const navigate = useNavigate();
   const location = useLocation();
   let state: any = location.state;
 
   useEffect(() => {
-    dispatch(geIIngredients());
+    dispatch(geIngredients());
     dispatch(checkUserAuth());
   }, [dispatch]);
 
