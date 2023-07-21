@@ -1,4 +1,4 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import burgerIngredientsReducer from "./slices/burgerIngredientsSlice";
 import burgerConstructorReducer from "./slices/burgerConstructorSlice";
 import orderDetailsReducer from "./slices/orderDetailsSlice";
@@ -16,7 +16,7 @@ import {
   wsConnecting as OrdersFeedWsConnecting,
 } from "./slices/orders-feed/actions";
 
-const ordersFeedMiddleware = socketMiddleware({
+const wsActions = {
   wsConnect: OrdersFeedWsConnect,
   wsDisconnect: OrdersFeedWsDisonnect,
   onOpen: OrdersFeedWsOpen,
@@ -24,22 +24,26 @@ const ordersFeedMiddleware = socketMiddleware({
   onError: OrdersFeedWsError,
   onMessage: OrdersFeedWsMessage,
   wsConnecting: OrdersFeedWsConnecting,
+};
+
+const ordersFeedMiddleware = socketMiddleware(wsActions);
+
+const rootReducer = combineReducers({
+  burgerIngredients: burgerIngredientsReducer,
+  burgerConstructor: burgerConstructorReducer,
+  orderDetails: orderDetailsReducer,
+  modal: modalReducer,
+  auth: authRedcuer,
+  ordersFeed: ordersFeedReducer,
 });
 
 export const store = configureStore({
-  reducer: {
-    burgerIngredients: burgerIngredientsReducer,
-    burgerConstructor: burgerConstructorReducer,
-    orderDetails: orderDetailsReducer,
-    modal: modalReducer,
-    auth: authRedcuer,
-    ordersFeed: ordersFeedReducer,
-  },
+  reducer: rootReducer,
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware().concat(ordersFeedMiddleware);
   },
 });
 
-export type RootState = ReturnType<typeof store.getState>;
+export type RootState = ReturnType<typeof rootReducer>;
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof store.dispatch;

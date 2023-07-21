@@ -7,9 +7,7 @@ import {
 import { createOrderRequest, getOrderRequest } from "../../utils/api";
 import {
   IngredientType,
-  CreateOrderResponseType,
   OrderType,
-  GetOrderResponseType,
 } from "../types/types";
 import axios from "axios";
 

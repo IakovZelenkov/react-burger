@@ -51,3 +51,9 @@ export interface CreateOrderResponseType {
 export interface GetOrderResponseType {
   orders: OrderType[];
 }
+
+export interface OrdersFeedResponseType {
+  orders: OrderType[];
+  total: number;
+  totalToday: number;
+}
