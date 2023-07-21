@@ -33,6 +33,8 @@ import { useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../../services/hooks/hooks";
 import { ConstructorIngredientType } from "../../services/types/types";
 
+import BurgerSkeleton from "../BurgerSkeleton/BurgerSkeleton";
+
 const BurgerConstructor: React.FC = () => {
   const orderDetailsModalOpen = useAppSelector(
     (state) => state.modal.orderDetailsModalOpen
@@ -99,7 +101,7 @@ const BurgerConstructor: React.FC = () => {
         >
           <div className={`${styles.item} pl-8`}>
             {bun === undefined ? (
-              <h3 className={`${styles.temp}`}>Перенесите сюда булку</h3>
+              <BurgerSkeleton />
             ) : (
               <ConstructorElement
                 type="top"
