@@ -1,9 +1,9 @@
 import React, { useMemo } from "react";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../../services/hooks/hooks";
 import styles from "./OrdersSummary.module.scss";
 
-const OrdersSummary = () => {
-  const { orders, total, totalToday } = useSelector(
+const OrdersSummary: React.FC = () => {
+  const { orders, total, totalToday } = useAppSelector(
     (state) => state.ordersFeed
   );
 

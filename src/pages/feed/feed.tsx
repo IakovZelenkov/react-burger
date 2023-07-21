@@ -3,7 +3,7 @@ import styles from "./feed.module.scss";
 import Orders from "../../components/Orders/Orders";
 import OrdersSummary from "../../components/OrdersSummary/OrdersSummary";
 
-const FeedPage = () => {
+const FeedPage: React.FC = () => {
   return (
     <div className={styles.container}>
       <h2 className="text text_type_main-large">Лента заказов</h2>

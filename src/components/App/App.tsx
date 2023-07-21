@@ -1,12 +1,6 @@
 import React, { useEffect } from "react";
 import styles from "./App.module.scss";
-import {
-  Routes,
-  Route,
-  useLocation,
-  useNavigate,
-  NavigateFunction,
-} from "react-router-dom";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { geIngredients } from "../../services/slices/burgerIngredientsSlice";
 import { checkUserAuth } from "../../services/slices/auth/actions";
 

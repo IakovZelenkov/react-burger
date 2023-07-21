@@ -7,14 +7,15 @@ import {
   connect,
   disconnect,
 } from "../../services/slices/orders-feed/actions";
-import { useSelector, useDispatch } from "react-redux";
 import { PROFILE_ORDERS_URL, ALL_ORDERS_URL } from "../../utils/constants";
-import Loader from "../../components/Loader/Loader";
+import Loader from "../Loader/Loader";
 import OrderCard from "../OrderCard/OrderCard";
+import { useAppSelector, useAppDispatch } from "../../services/hooks/hooks";
+import { OrderType } from "../../services/types/types";
 
-const Orders = () => {
-  const { orders, status } = useSelector((state) => state.ordersFeed);
-  const dispatch = useDispatch();
+const Orders: React.FC = () => {
+  const { orders, status } = useAppSelector((state) => state.ordersFeed);
+  const dispatch = useAppDispatch();
   const isLoading = status === WebsocketStatus.CONNECTING;
 
   const match = useMatch({
@@ -51,7 +52,7 @@ const Orders = () => {
     );
   }
 
-  const checkOrder = (order) => {
+  const checkOrder = (order: OrderType) => {
     return (
       order.ingredients !== undefined &&
       order.ingredients !== null &&

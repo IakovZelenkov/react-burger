@@ -12,19 +12,6 @@ const BurgerIngredients: React.FC = () => {
   const [inViewSauce, sauceInView] = useInView({ threshold: 0.5 });
   const [active, setActive] = React.useState<string>("");
 
-  // const bunRef = {
-  //   titleRef: useRef<HTMLHeadingElement>(null),
-  //   inViewRef: inViewBun,
-  // };
-  // const mainRef = {
-  //   titleRef: useRef<HTMLHeadingElement>(null),
-  //   inViewRef: inViewMain,
-  // };
-  // const sauceRef = {
-  //   titleRef: useRef<HTMLHeadingElement>(null),
-  //   inViewRef: inViewSauce,
-  // };
-
   const bunRef = useRef<HTMLHeadingElement>(null);
   const mainRef = useRef<HTMLHeadingElement>(null);
   const sauceRef = useRef<HTMLHeadingElement>(null);
