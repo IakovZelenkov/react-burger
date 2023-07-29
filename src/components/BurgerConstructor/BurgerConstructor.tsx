@@ -71,12 +71,16 @@ const BurgerConstructor: React.FC = () => {
     }, 50);
   };
 
-  const [{ isHover }, dropTarget] = useDrop({
+  const [{ isHover }, dropTarget] = useDrop<
+    IngredientType,
+    unknown,
+    { isHover: boolean }
+  >({
     accept: "ingredient",
     collect: (monitor) => ({
       isHover: monitor.isOver(),
     }),
-    drop(ingredient: any) {
+    drop(ingredient) {
       handleDrop(ingredient);
     },
   });

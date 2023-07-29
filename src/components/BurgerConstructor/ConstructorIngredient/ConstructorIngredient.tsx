@@ -1,4 +1,5 @@
 import React, { useRef, useCallback } from "react";
+import { Identifier } from "dnd-core";
 import {
   ConstructorElement,
   DragIcon,
@@ -32,14 +33,21 @@ const ConstructorIngredient: React.FC<ConstructorIngredientProps> = ({
     [dispatch]
   );
 
-  const [{ handlerId }, drop] = useDrop({
+  const [{ handlerId }, drop] = useDrop<
+    {
+      ingredient: IngredientType;
+      index: number;
+    },
+    unknown,
+    { handlerId: Identifier | null }
+  >({
     accept: "item",
     collect(monitor: DropTargetMonitor) {
       return {
         handlerId: monitor.getHandlerId(),
       };
     },
-    hover(item: any, monitor) {
+    hover(item, monitor) {
       if (!ref.current) {
         return;
       }
