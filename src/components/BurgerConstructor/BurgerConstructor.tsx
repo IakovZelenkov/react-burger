@@ -31,7 +31,7 @@ import {
 } from "../../services/slices/modalSlice";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../../services/hooks/hooks";
-import { ConstructorIngredientType } from "../../services/types/types";
+import { IngredientType } from "../../services/types/types";
 
 import BurgerSkeleton from "../BurgerSkeleton/BurgerSkeleton";
 
@@ -55,7 +55,7 @@ const BurgerConstructor: React.FC = () => {
     ingredients.reduce((acc, ingredient) => acc + ingredient.price, 0) +
     (bun === undefined ? 0 : bun.price * 2);
 
-  const handleDrop = (ingredient: ConstructorIngredientType) => {
+  const handleDrop = (ingredient: IngredientType) => {
     if (ingredient.type !== "bun" && bun === undefined) {
       window.alert("Сначала добавьте булку");
       return;

@@ -26,7 +26,7 @@ function App() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  let state: any = location.state;
+  let state = location.state;
 
   useEffect(() => {
     dispatch(geIngredients());

@@ -11,10 +11,10 @@ import {
 import { XYCoord, useDrag, useDrop, DropTargetMonitor } from "react-dnd";
 import { moveIngredient } from "../../../services/slices/burgerConstructorSlice";
 import { useAppDispatch } from "../../../services/hooks/hooks";
-import { ConstructorIngredientType } from "../../../services/types/types";
+import { IngredientType } from "../../../services/types/types";
 
 type ConstructorIngredientProps = {
-  item: ConstructorIngredientType;
+  item: IngredientType;
   index: number;
 };
 

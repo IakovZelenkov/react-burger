@@ -1,5 +1,4 @@
 import Cookies from "js-cookie";
-import { Dispatch } from "redux";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { setToken } from "../../../utils/cookie";
 import { setAuthChecked, resetUser } from "./slice";
@@ -14,6 +13,7 @@ import {
 } from "../../../utils/api";
 import axios from "axios";
 import { UserType } from "../../types/types";
+import { AppDispatch } from "../../store";
 
 export const getUser = createAsyncThunk<
   UserType,
@@ -102,7 +102,7 @@ export const logoutUser = createAsyncThunk<
   }
 });
 
-export const checkUserAuth = () => (dispatch: Dispatch<any>) => {
+export const checkUserAuth = () => (dispatch: AppDispatch) => {
   if (Cookies.get("accessToken")) {
     dispatch(getUser());
   } else {

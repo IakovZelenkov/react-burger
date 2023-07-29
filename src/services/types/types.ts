@@ -11,15 +11,12 @@ export interface IngredientType {
   image_mobile: string;
   image_large: string;
   __v: number;
+  uniqueID?: string;
 }
 
 export interface UserType {
   email: string;
   name: string;
-}
-
-export interface ConstructorIngredientType extends IngredientType {
-  uniqueID: string;
 }
 
 export interface OwnerType {
