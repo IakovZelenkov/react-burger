@@ -1,0 +1,31 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  min-width: 536px;
+  gap: 16px;
+  text-align: center;
+}
+
+.item {
+  padding: 16px 24px;
+  display: inline-block;
+  border-radius: 64px;
+  background: #2f2f37;
+  max-width: 536px;
+  width: 100%;
+  min-height: 80px;
+  flex-grow: 1;
+  box-sizing: border-box;
+}
+
+.middle {
+  // height: 464px;
+}
+
+.top {
+  border-radius: 88px 88px 40px 40px;
+}
+
+.bottom {
+  border-radius: 40px 40px 88px 88px;
+}

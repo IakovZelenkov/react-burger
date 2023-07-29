@@ -29,3 +29,28 @@
     transform: translate(-50%, -46%);
   }
 }
+
+.item {
+  display: flex;
+  gap: 8px;
+  text-decoration: none;
+  color: #8585ad;
+
+  svg {
+    fill: #8585ad;
+  }
+
+  :hover {
+    color: #f2f2f3;
+    svg {
+      fill: #f2f2f3;
+    }
+  }
+
+  .active {
+    color: #f2f2f3;
+    svg {
+      fill: #f2f2f3;
+    }
+  }
+}
