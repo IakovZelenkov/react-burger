@@ -62,5 +62,5 @@
 	"devDependencies": {
 		"gh-pages": "^5.0.0"
 	},
-	"homepage": "./react-burger"
+	"homepage": "https://iakovzelenkov.github.io/react-burger/"
 }
